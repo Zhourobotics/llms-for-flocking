@@ -2,7 +2,6 @@ from openai import OpenAI
 
 import asyncio
 import random
-import json
 import time
 
 from agents import *
@@ -21,14 +20,13 @@ async def main():
 
     # we create our list of agents and add them to the list
     for i in range(3):
-        # 1d --> 2d
         agents.append(FlockingAgent(i, [random.randint(0, 10), random.randint(0, 10)]))
 
     # todo: prettyprint!
     # todo: better err. handling
     for r in range(rounds):
-        tic = time.time()
-        if not all(agent.pos == agents[0].pos for agent in agents):
+        tick = time.time()
+        if not all(agent.position == agents[0].position for agent in agents):
             print("===ROUND {} ===".format(r))
             coroutines = []
             for agent in agents:
@@ -38,11 +36,11 @@ async def main():
                     else prompts.Flocking.game_description
                 )
                 props = message.format(
-                    agent.pos,
+                    agent.position,
                     "[{}]".format(
                         ", ".join(
                             map(
-                                lambda a: str(a.pos),
+                                lambda a: str(a.position),
                                 filter(
                                     lambda a: a.identifier != agent.identifier, agents
                                 ),
@@ -61,11 +59,11 @@ async def main():
                 # you guessed it (debug)
                 print(
                     "Position: {}\nPeers: {}".format(
-                        agent.pos,
+                        agent.position,
                         "[{}]".format(
                             ", ".join(
                                 map(
-                                    lambda a: str(a.pos),
+                                    lambda a: str(a.position),
                                     filter(
                                         lambda a: a.identifier != agent.identifier,
                                         agents,
@@ -91,7 +89,7 @@ async def main():
                 print("Error in an agent's response format or failed to move agent!")
         else:
             print(f"Consensus reached on round {r - 1}")
-        time_lapse = time.time() - tic
+        time_lapse = time.time() - tick
         print(f"Time for this round is {time_lapse:.2f}")
 
     for agent in agents:
