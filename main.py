@@ -22,7 +22,7 @@ async def main():
     # we create our list of agents and add them to the list
     for i in range(3):
         # 1d --> 2d
-        agents.append(Agent2D_flock(i, [random.randint(0, 10), random.randint(0, 10)]))
+        agents.append(FlockingAgent(i, [random.randint(0, 10), random.randint(0, 10)]))
 
     # todo: prettyprint!
     # todo: better err. handling
@@ -32,33 +32,10 @@ async def main():
             print("===ROUND {} ===".format(r))
             coroutines = []
             for agent in agents:
-                # give our agent game description on the first round
-                # and the updated text after that
-
-                # two_dimensional -> one_dimensional for 1d arrays
-                # message = (
-                #     prompts.two_dimensional.round_description
-                #     if r > 0
-                #     else prompts.two_dimensional.game_description
-                # )
-                # props = message.format(
-                #     agent.pos,
-                #     "[{}]".format(
-                #         ", ".join(
-                #             map(
-                #                 lambda a: str(a.pos),
-                #                 filter(
-                #                     lambda a: a.identifier != agent.identifier, agents
-                #                 ),
-                #             )
-                #         )
-                #     ),
-                # )
-
                 message = (
-                    prompts.flocking_2D.round_description
+                    prompts.Flocking.round_description
                     if r > 0
-                    else prompts.flocking_2D.game_description
+                    else prompts.Flocking.game_description
                 )
                 props = message.format(
                     agent.pos,
@@ -100,7 +77,7 @@ async def main():
                 )
 
                 # ask agent where to move (coroutine)
-                coroutines.append(agent.prompt(props + " " + prompts.agent_output_form))
+                coroutines.append(agent.prompt(props + " " + prompts.Flocking.output_form))
 
                 print(agent.latest)  # debug line
                 print("---------\n")  # debug line
@@ -108,7 +85,7 @@ async def main():
             try:
                 # wait for coroutines to finish
                 await asyncio.gather(*coroutines)
-                # update each agents location!
+                # update each agent's location!
                 list(map(lambda agent: agent.update(), agents))
             except:
                 print("Error in an agent's response format or failed to move agent!")
