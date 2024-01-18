@@ -1,4 +1,4 @@
-LLMS For Flocking
+# LLMS For Flocking
 The first ever flocking LLM paper!
 
 ## Prerequisites
