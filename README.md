@@ -1,5 +1,5 @@
-# Reproducing Results: Multi-Agent Coonsensus Seeking via Large Language Models
-Reproducing the results of Westlake Intelligent Robotics' [Consensus LLM Paper](https://github.com/WestlakeIntelligentRobotics/ConsensusLLM-code)
+LLMS For Flocking
+The first ever flocking LLM paper!
 
 ## Prerequisites
 - Make sure you have [Python](https://www.python.org/downloads/) installed
