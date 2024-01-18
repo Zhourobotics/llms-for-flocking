@@ -1,0 +1,6 @@
+.env
+__pycache__/
+*$py.class
+pip-log.txt
+pip-delete-this-directory.txt
+secret.yml
