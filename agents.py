@@ -8,7 +8,7 @@ from keys import get_key
 
 class Agent:
     identifier = ""
-    latest = ""  # latest msg
+    latest = ""
     position = None
     memory = []
     position_history = []
@@ -36,20 +36,13 @@ class Agent:
 
 class FlockingAgent(Agent):
     def define_system(self):
-        self.memory.append(
-            {
-                "role": "system",
-                "content": prompts.Flocking.agent_role
-            }
-        )
+        self.memory.append({"role": "system", "content": prompts.Flocking.agent_role})
 
     async def prompt(self, message):
         self.memory.append({"role": "user", "content": message})
 
         completion = self.client.chat.completions.create(model="gpt-4-1106-preview", messages=self.memory)
-        self.memory.append(
-            {"role": "assistant", "content": completion.choices[0].message.content}
-        )
+        self.memory.append({"role": "assistant", "content": completion.choices[0].message.content})
         self.latest = completion.choices[0].message.content
 
     def update(self):
@@ -57,6 +50,4 @@ class FlockingAgent(Agent):
         self.position_history.append(self.position)
 
     def __str__(self):
-        return "[{} Agent2D: (x: {}, y: {})]".format(
-            self.identifier, self.position[0], self.position[1]
-        )
+        return "[{} Agent2D: (x: {}, y: {})]".format(self.identifier, self.position[0], self.position[1])

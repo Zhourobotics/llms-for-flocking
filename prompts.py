@@ -11,10 +11,18 @@ class Flocking:
     )
     round_description = (
         "You have now moved to: [{}]. The new positions of the other drones are: [{}]. The goal position is [{}]. "
-        "Keeping in mind the maximum amount of units you are allowed to move, please select a new position to move to."
+        "Keeping in mind your maximum velocity, please select a new position to move to."
     )
     output_form = (
         "Strictly follow the 'Reasoning:..., Position:...' format to provide your answer; providing "
         "your thought process in the reasoning section while keeping the position section ONLY "
         "for the position you wish to move to this iteration, without any further explanation."
     )
+
+    @staticmethod
+    def get_game_description(position, other_positions, goal_position, max_velocity, flock_shape, safe_distance):
+        return Flocking.game_description.format(position, other_positions, goal_position, max_velocity, flock_shape, safe_distance)
+
+    @staticmethod
+    def get_round_description(position, other_positions, goal_position):
+        return Flocking.round_description.format(position, other_positions, goal_position)

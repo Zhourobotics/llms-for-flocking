@@ -8,10 +8,10 @@ from agents import *
 import prompts
 from plot_result import *
 
-GOAL = [95, 95]
-PATTERN = "line"
-MAX_V = 5
-EPS = 1
+goal_position = [95, 95]
+flock_shape = "line"
+max_velocity = 5
+safe_distance = 1
 
 
 async def main():
@@ -30,28 +30,25 @@ async def main():
             print("===ROUND {} ===".format(r))
             coroutines = []
             for agent in agents:
-                message = (
-                    prompts.Flocking.round_description
-                    if r > 0
-                    else prompts.Flocking.game_description
-                )
-                props = message.format(
-                    agent.position,
-                    "[{}]".format(
-                        ", ".join(
-                            map(
-                                lambda a: str(a.position),
-                                filter(
-                                    lambda a: a.identifier != agent.identifier, agents
-                                ),
-                            )
-                        )
-                    ),
-                    GOAL,
-                    MAX_V,
-                    PATTERN,
-                    EPS,
-                )
+
+                other_agent_positions = "{}".format(", ".join(
+                    map(lambda a: str(a.position), filter(lambda a: a.identifier != agent.identifier, agents))))
+
+                if r > 0:
+                    message = prompts.Flocking.get_round_description(
+                        agent.position,
+                        other_agent_positions,
+                        goal_position
+                    )
+                else:
+                    message = prompts.Flocking.get_game_description(
+                        agent.position,
+                        other_agent_positions,
+                        goal_position,
+                        max_velocity,
+                        flock_shape,
+                        safe_distance
+                    )
 
                 print("---------")  # debug line
                 print("AGENT", agent.identifier)  # debug line
@@ -60,22 +57,12 @@ async def main():
                 print(
                     "Position: {}\nPeers: {}".format(
                         agent.position,
-                        "[{}]".format(
-                            ", ".join(
-                                map(
-                                    lambda a: str(a.position),
-                                    filter(
-                                        lambda a: a.identifier != agent.identifier,
-                                        agents,
-                                    ),
-                                )
-                            )
-                        ),
+                        "[{}]".format(other_agent_positions),
                     )
                 )
 
                 # ask agent where to move (coroutine)
-                coroutines.append(agent.prompt(props + " " + prompts.Flocking.output_form))
+                coroutines.append(agent.prompt(message + " " + prompts.Flocking.output_form))
 
                 print(agent.latest)  # debug line
                 print("---------\n")  # debug line
