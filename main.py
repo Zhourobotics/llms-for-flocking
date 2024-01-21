@@ -3,20 +3,27 @@ from openai import OpenAI
 import asyncio
 import random
 import time
+import json
 
 from agents import *
 import prompts
 from plot_result import *
 
-goal_position = [95, 95]
-flock_shape = "line"
-max_velocity = 5
-safe_distance = 1
-
 
 async def main():
+    # loading configuration for test
+    with open('config.json', 'r') as json_file:
+        config = json.load(json_file)
+
+    test_id =       config["test_id"]
+    goal_position = config["goal_position"]
+    flock_shape =   config["flock_shape"]
+    max_velocity =  config["max_velocity"]
+    safe_distance = config["safe_distance"]
+    rounds =        config["rounds"]
+    
     agents = []
-    rounds = 6
+
 
     # we create our list of agents and add them to the list
     for i in range(3):
@@ -24,6 +31,7 @@ async def main():
 
     # todo: prettyprint!
     # todo: better err. handling
+    # todo: saving result - Peihan
     for r in range(rounds):
         tick = time.time()
         if not all(agent.position == agents[0].position for agent in agents):

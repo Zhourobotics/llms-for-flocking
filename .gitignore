@@ -7,3 +7,4 @@ secret.yml
 .DS_Store
 venv/
 .idea/
+test.py/

@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+# reserved line style
 SHAPE = ["-o", "-v", "-s", "-D", "-x"]
 
 
