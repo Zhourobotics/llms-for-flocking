@@ -4,5 +4,6 @@
     "flock_shape":      "line",
     "max_velocity":     5,
     "safe_distance":    1,
-    "rounds":           6
+    "rounds":           6,
+    "model": "gpt4"
 }
