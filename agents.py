@@ -5,8 +5,6 @@ import json
 import prompts
 from keys import get_key
 
-model = {"gpt4": "gpt-4-1106-preview", "gpt3.5": "gpt-3.5-turbo-1106"}
-
 class Agent:
     identifier = ""
     latest = ""
@@ -45,7 +43,7 @@ class FlockingAgent(Agent):
 
         self.memory.append({"role": "user", "content": message})
 
-        completion = self.client.chat.completions.create(model=model[config["model"]], messages=self.memory)
+        completion = self.client.chat.completions.create(model=config["model"], messages=self.memory)
         self.memory.append({"role": "assistant", "content": completion.choices[0].message.content})
         self.latest = completion.choices[0].message.content
 
