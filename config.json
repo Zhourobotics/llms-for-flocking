@@ -4,8 +4,11 @@
     "flock_shape":      "line",
     "max_velocity":     5,
     "safe_distance":    1,
-    "rounds":           6,
-    "agent_count":      3,
-    "model":            "gpt-3.5-turbo-1106",
+    "rounds":           12,
+    "agent_count":      7,
+    "model":            "gpt-4-1106-preview",
+
+
+    "gpt3_model":       "gpt-3.5-turbo-1106",
     "gpt4_model":       "gpt-4-1106-preview"
 }

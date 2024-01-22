@@ -43,7 +43,7 @@ class Graph:
         plt.show()
 
     @staticmethod
-    def plot_animated(agents, frames_per_round=10):
+    def plot_animated(agents, frames_per_round=16):
         fig, ax = plt.subplots()
 
         def update(frame):
