@@ -16,15 +16,14 @@ async def main():
     with open('config.json', 'r') as json_file:
         config = json.load(json_file)
 
-    test_id =       config["test_id"]
+    test_id = config["test_id"]
     goal_position = config["goal_position"]
-    flock_shape =   config["flock_shape"]
-    max_velocity =  config["max_velocity"]
+    flock_shape = config["flock_shape"]
+    max_velocity = config["max_velocity"]
     safe_distance = config["safe_distance"]
-    rounds =        config["rounds"]
-    
-    agents = []
+    rounds = config["rounds"]
 
+    agents = []
 
     # we create our list of agents and add them to the list
     for i in range(3):
