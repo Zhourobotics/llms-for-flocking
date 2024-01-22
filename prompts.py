@@ -15,8 +15,8 @@ class Flocking:
         "Keeping in mind your maximum velocity, please select a new position to move to."
     )
     output_form = (
-        "Strictly follow the 'Reasoning:..., Position: [x, y]' format to provide your answer; providing "
-        "your thought process in the reasoning section while keeping the position section ONLY "
+        "Strictly follow the 'Reasoning:..., Position: [x, y]' format to provide your answer; briefly "
+        "providing your thought process in the reasoning section while keeping the position section ONLY "
         "for the position you wish to move to this iteration, without any further explanation."
     )
 

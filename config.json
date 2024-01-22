@@ -1,11 +1,11 @@
 {
     "test_id":          1,
     "goal_position":    [95, 95],
-    "flock_shape":      "V",
-    "max_velocity":     5,
-    "safe_distance":    1,
-    "rounds":           12,
-    "agent_count":      7,
+    "flock_shape":      "line",
+    "max_velocity":     10,
+    "safe_distance":    2,
+    "rounds":           6,
+    "agent_count":      5,
     "model":            "gpt-3.5-turbo-0613",
 
 
