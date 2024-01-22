@@ -8,11 +8,11 @@ class one_dimensional:
 
 class two_dimensional:
     agent_role = 'You are a robot moving in a two-dimensional space.'
-    game_description = "There are many other robots in the space. You all need to gather at the same position. Your position is: {}, and the positions of others are: {}.\nChoose a position to move to in order to gather, and briefly explain the reasoning behind your decision."
-    round_description = "You have now moved to {}. The positions of other robots are {}.\nPlease choose the next position you want to move to."
+    game_description = "Your current position is {} and the positions of other drones you are in a flock with are as follows: {}. Your objective is to implement Boids flocking behavior to maintain a flock with the other drones, and keeping in mind your final position. You must move to a different position each round. You must also briefly explain the reasoning behind your decision."
+    round_description = "You have now moved to {}. The positions of other robots are {}. You must move to a different position.\nPlease choose the next position you want to move to."
 
 
-agent_output_form = "Strictly follow the 'Reasoning:..., Position:...' format to provide your answer.\nIn the 'Reasoning' section, it is your thought process, while the 'position' section is only the location you wish to move to in this round, without any further explanation needed."
+agent_output_form = "Strictly follow the 'Reasoning:..., Position:...' format to provide your answer; providing your thought process in the reasoning section while keeping the position section ONLY for the position you wish to move to this iteration, without any further explanation."
 
 class personality:
     stubborn = "You are an extremely stubborn person, prefer to remain stationary."

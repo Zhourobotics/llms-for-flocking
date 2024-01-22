@@ -12,6 +12,7 @@ import prompts
 async def main():
     agents = []
     rounds = 10
+    minimumSpeed = 0.5
 
     # we create our list of agents and add them to the list
     for i in range(3):
@@ -35,6 +36,7 @@ async def main():
                         ", ".join(map(lambda a: str(a.pos), filter(lambda a: a.identifier != agent.identifier, agents)))
                     )
                 )
+                print('props: ', props)
                 print("---------")  # debug line
                 print("AGENT", agent.identifier)  # debug line
 
