@@ -21,7 +21,7 @@ async def main():
     max_velocity = config["max_velocity"]
     safe_distance = config["safe_distance"]
     rounds = config["rounds"]
-    agent_count = config["agent_count"]
+    agent_count = config["agent_count"] + 1
 
     agents = []
 
