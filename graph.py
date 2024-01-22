@@ -1,12 +1,14 @@
 import matplotlib.pyplot
 import matplotlib.pyplot as plt
+
+from matplotlib.animation import FuncAnimation
 from matplotlib.patches import FancyArrowPatch
 
 # pycharm animation support
 matplotlib.use("TkAgg")
 
-class Graph:
 
+class Graph:
     @staticmethod
     def plot_agents(agents):
         # Define a list of colors for different agents

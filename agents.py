@@ -5,6 +5,7 @@ import json
 import prompts
 from keys import get_key
 
+
 class Agent:
     identifier = ""
     latest = ""
