@@ -96,7 +96,7 @@ async def main():
         print("{}: {}".format(agent.identifier, agent.position_history))
 
     # show the final graph
-    Graph.plot_agents(agents)
+    Graph.plot_animated(agents)
 
 
 if __name__ == "__main__":
