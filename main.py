@@ -6,9 +6,8 @@ import time
 import json
 
 from agents import *
-from graph import Graph
+from graph import *
 import prompts
-from plot_result import *
 
 
 async def main():
@@ -83,7 +82,8 @@ async def main():
                 list(map(lambda agent: agent.update(), agents))
 
                 # updates the graph
-                Graph.plot_agents(agents)
+                # lets use an animated view for this
+                # Graph.plot_agents(agents)
 
             except Exception as e:
                 print(f"Error: {e}. Error in an agent's response format or failed to move agent!")
@@ -95,7 +95,8 @@ async def main():
     for agent in agents:
         print("{}: {}".format(agent.identifier, agent.position_history))
 
-    #plot_result(agents).plot_fig()
+    # show the final graph
+    Graph.plot_agents(agents)
 
 
 if __name__ == "__main__":
