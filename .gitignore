@@ -4,4 +4,7 @@ __pycache__/
 pip-log.txt
 pip-delete-this-directory.txt
 secret.yml
+.DS_Store
+venv/
 .idea/
+test.py/
