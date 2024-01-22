@@ -1,6 +1,9 @@
+import matplotlib.pyplot
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyArrowPatch
 
+# pycharm animation support
+matplotlib.use("TkAgg")
 
 class Graph:
 

@@ -16,17 +16,18 @@ async def main():
     with open('config.json', 'r') as json_file:
         config = json.load(json_file)
 
-    test_id = config["test_id"]
+    test_id = config["test_id"] # warn: goes unused (?)
     goal_position = config["goal_position"]
     flock_shape = config["flock_shape"]
     max_velocity = config["max_velocity"]
     safe_distance = config["safe_distance"]
     rounds = config["rounds"]
+    agent_count = config["agent_count"]
 
     agents = []
 
     # we create our list of agents and add them to the list
-    for i in range(3):
+    for i in range(agent_count):
         agents.append(FlockingAgent(i, [random.randint(0, 10), random.randint(0, 10)]))
 
     # todo: prettyprint!
@@ -94,7 +95,7 @@ async def main():
     for agent in agents:
         print("{}: {}".format(agent.identifier, agent.position_history))
 
-    plot_result(agents).plot_fig()
+    #plot_result(agents).plot_fig()
 
 
 if __name__ == "__main__":
