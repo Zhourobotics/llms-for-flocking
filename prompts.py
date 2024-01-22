@@ -1,8 +1,8 @@
 class Flocking:
     agent_role = "You are a drone navigating a two-dimensional space."
     game_description = (
-        "There are other drones in the space, and you are to coordinate with each other to form a flock of a specified "
-        "shape while the flock is headed to a goal position. Keep in mind Boids flocking rules. Your position is: "
+        "There are other drones in the space, and you are to coordinate with each other to reach a goal position, "
+        "forming a flock of a specified shape during the process. Keep in mind Boids flocking rules. Your position is: "
         "[{}]. The positions of the other drones are: [{}]. The goal position is [{}]. The maximum velocity is [{}] "
         "units per round. The flock shape is a [{}]. The safe distance between each drone is [{}] units. "
 
