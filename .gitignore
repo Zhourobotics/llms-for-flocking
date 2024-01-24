@@ -8,4 +8,4 @@ secret.yml
 venv/
 .idea/
 test.py/
-/results
+/results/*

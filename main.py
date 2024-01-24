@@ -8,6 +8,7 @@ import json
 from agents import *
 from graph import *
 import prompts
+from post_process import PostProcess
 
 
 async def main():
@@ -97,6 +98,10 @@ async def main():
 
     # show the final graph
     Graph.plot_animated(agents)
+
+    # saving data
+    post_processor = PostProcess()
+    post_processor.save_data(agents, config)
 
 
 if __name__ == "__main__":
