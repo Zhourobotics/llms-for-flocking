@@ -1,4 +1,5 @@
 import pickle
+import os
 
 
 class PostProcess:
@@ -7,6 +8,10 @@ class PostProcess:
     """
 
     def __init__(self) -> None:
+        # Create results directory if none exists
+        if not os.path.exists("./results"):
+            os.makedirs("./results")
+
         self._agents = []
         self._config = []
         self._pos_hist = []
