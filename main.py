@@ -17,10 +17,10 @@ async def main():
         config = json.load(json_file)
 
     test_id = config["test_id"] # warn: goes unused (?)
-    goal_position = config["goal_position"]
+    goal_position = [float(config["goal_position"][0]), float(config["goal_position"][1])]
     flock_shape = config["flock_shape"]
-    max_velocity = config["max_velocity"]
-    safe_distance = config["safe_distance"]
+    max_velocity = float(config["max_velocity"])
+    safe_distance = float(config["safe_distance"])
     rounds = config["rounds"]
     agent_count = config["agent_count"] + 1
 
@@ -28,7 +28,10 @@ async def main():
 
     # we create our list of agents and add them to the list
     for i in range(agent_count):
-        agents.append(FlockingAgent(i, [random.randint(0, 10), random.randint(0, 10)]))
+        agents.append(FlockingAgent(i, [
+            round(random.uniform(1.0, 10.0), 2),
+            round(random.uniform(1.0, 10.0), 2),
+        ]))
 
     # todo: prettyprint!
     # todo: better err. handling

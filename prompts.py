@@ -22,8 +22,19 @@ class Flocking:
 
     @staticmethod
     def get_game_description(position, other_positions, goal_position, max_velocity, flock_shape, safe_distance):
-        return Flocking.game_description.format(position, other_positions, goal_position, max_velocity, flock_shape, safe_distance)
+        return Flocking.game_description.format(
+            position,
+            other_positions,
+            goal_position,
+            max_velocity,
+            flock_shape,
+            safe_distance
+        )
 
     @staticmethod
     def get_round_description(position, other_positions, goal_position):
-        return Flocking.round_description.format(position, other_positions, goal_position)
+        return Flocking.round_description.format(
+            position,
+            other_positions,
+            goal_position
+        )
