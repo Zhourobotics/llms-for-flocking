@@ -1,4 +1,8 @@
 openai
+flask
+flask_restful
+flask_cors
+pyttsx3
 PyYAML
 matplotlib
 numpy
