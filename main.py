@@ -3,31 +3,22 @@ from openai import OpenAI
 import asyncio
 import random
 import time
-import json
 
 from agents import *
 from graph import *
 import prompts
-from post_process import PostProcess
+
+from data import Data
 
 
 async def main():
-    # loading configuration for test
     with open('config.json', 'r') as json_file:
         config = json.load(json_file)
-
-    test_id = config["test_id"] # warn: goes unused (?)
-    goal_position = [float(config["goal_position"][0]), float(config["goal_position"][1])]
-    flock_shape = config["flock_shape"]
-    max_velocity = float(config["max_velocity"])
-    safe_distance = float(config["safe_distance"])
-    rounds = config["rounds"]
-    agent_count = config["agent_count"] + 1
 
     agents = []
 
     # we create our list of agents and add them to the list
-    for i in range(agent_count):
+    for i in range(config["agent_count"] + 1):
         agents.append(FlockingAgent(i, [
             round(random.uniform(1.0, 10.0), 2),
             round(random.uniform(1.0, 10.0), 2),
@@ -35,14 +26,13 @@ async def main():
 
     # todo: prettyprint!
     # todo: better err. handling
-    # todo: saving result - Peihan
-    for r in range(rounds):
+
+    for r in range(config["rounds"]):
         tick = time.time()
         if not all(agent.position == agents[0].position for agent in agents):
             print("===ROUND {} ===".format(r))
             coroutines = []
             for agent in agents:
-
                 other_agent_positions = "{}".format(", ".join(
                     map(lambda a: str(a.position), filter(lambda a: a.identifier != agent.identifier, agents))))
 
@@ -50,16 +40,16 @@ async def main():
                     message = prompts.Flocking.get_round_description(
                         agent.position,
                         other_agent_positions,
-                        goal_position
+                        [float(config["goal"][0]), float(config["goal"][1])],
                     )
                 else:
                     message = prompts.Flocking.get_game_description(
                         agent.position,
                         other_agent_positions,
-                        goal_position,
-                        max_velocity,
-                        flock_shape,
-                        safe_distance
+                        [float(config["goal"][0]), float(config["goal"][1])],
+                        float(config["max_velocity"]),
+                        config["flock_shape"],
+                        float(config["safe_distance"])
                     )
 
                 print("---------")  # debug line
@@ -85,10 +75,6 @@ async def main():
                 # update each agent's location!
                 list(map(lambda agent: agent.update(), agents))
 
-                # updates the graph
-                # lets use an animated view for this
-                # Graph.plot_agents(agents)
-
             except Exception as e:
                 print(f"Error: {e}. Error in an agent's response format or failed to move agent!")
         else:
@@ -99,13 +85,11 @@ async def main():
     for agent in agents:
         print("{}: {}".format(agent.identifier, agent.position_history))
 
-    # show the final graph
-    Graph.plot_animated(agents)
+    # Save Data
+    results = Data.save(agents, config)
 
-    # saving data
-    post_processor = PostProcess()
-    post_processor.save_data(agents, config)
-
+    # Animate Final Graph
+    Graph.plot_animated(Data.load(results))
 
 if __name__ == "__main__":
     asyncio.run(main())
