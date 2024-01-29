@@ -18,7 +18,7 @@ async def main():
     agents = []
 
     # we create our list of agents and add them to the list
-    for i in range(config["agent_count"] + 1):
+    for i in range(config["agents"] + 1):
         agents.append(FlockingAgent(i, [
             round(random.uniform(1.0, 10.0), 2),
             round(random.uniform(1.0, 10.0), 2),
