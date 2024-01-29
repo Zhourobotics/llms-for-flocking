@@ -1,13 +1,13 @@
 import yaml
 
-with open('./secret.yml', 'r') as secret_file:
+with open('./secrets.yml', 'r') as secret_file:
     secret = yaml.safe_load(secret_file)
 
 api_keys = secret.get('api_keys', {})
 coolest_key = 0
 
 if len(api_keys) == 0:
-    exit("Error: api_keys could not be found in secret.yml")
+    exit("Error: api_keys could not be found in secrets.yml")
 
 
 # returns the first api key in the list
