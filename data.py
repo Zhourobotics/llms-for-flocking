@@ -27,7 +27,7 @@ class Data:
         if not os.path.isdir(f'./{results}/{identifier}'):
             os.makedirs(f'./{results}/{identifier}')  # create an empty test results directory
 
-            file = open(f'./{results}/{identifier}/test', 'ab')
+            file = open(f'./{results}/{identifier}/results', 'ab')
 
             agents_object = [
                 {
@@ -48,7 +48,7 @@ class Data:
     @staticmethod
     def load(identifier, results="results"):
         # todo: error handling
-        file = open(f'./{results}/{identifier}/test', 'rb')
+        file = open(f'./{results}/{identifier}/results', 'rb')
         data = pickle.load(file)
         print(f'Success: Load test {identifier}!')
         return data
