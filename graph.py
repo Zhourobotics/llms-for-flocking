@@ -21,7 +21,7 @@ class Graph:
         scatters = []
         start_scatters = []
 
-        for i in range(data.config["agent"]):
+        for i in range(data.config["agents"]):
             current_color = Graph.colors[i % 8]
             flight_path_line, = ax.plot([], [], lw=2, color=current_color, label=f'Drone {i + 1} Path',
                                         linestyle='--', )
