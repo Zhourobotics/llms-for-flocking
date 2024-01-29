@@ -3,69 +3,70 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from matplotlib.animation import FuncAnimation
-from matplotlib.patches import FancyArrowPatch
 
 # pycharm animation support
 matplotlib.use("TkAgg")
 
 
 class Graph:
+    # todo: prettier colors
     colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'cyan', 'magenta', 'brown', 'black']
 
     @staticmethod
-    def plot_agents(agents):
-        # Create a figure and axis
-        fig, ax = plt.subplots()
+    def plot_animated(data):
+        # forgive me
+        fig, ax = plt.subplots(figsize=(8, 4))
 
-        for idx, agent in enumerate(agents):
-            color = Graph.colors[idx % len(Graph.colors)]
+        lines = []
+        scatters = []
+        start_scatters = []
 
-            # Plot each segment with an arrow
-            for i in range(len(agent.position_history) - 1):
-                start, end = agent.position_history[i], agent.position_history[i + 1]
-                # Create our arrow patch
-                arrow = FancyArrowPatch(start, end, color=color, arrowstyle='->', mutation_scale=20)
-                ax.add_patch(arrow)
+        for i in range(data.config["agent"]):
+            current_color = Graph.colors[i % 8]
+            flight_path_line, = ax.plot([], [], lw=2, color=current_color, label=f'Drone {i + 1} Path',
+                                        linestyle='--', )
+            # reshape color here but whatevs
+            scatter = ax.scatter([], [], marker='o', c=current_color, s=50)
 
-                # Plot points
-                ax.plot(*start, color=color, marker='o')
-                ax.plot(*end, color=color, marker='o')
+            start_pos = data.agents[i]["position_history"][0]
+            # reshape this too
+            start_scatter = ax.scatter(start_pos[0], start_pos[1], alpha=0.5, color=current_color, s=100, marker='o',
+                                       label=f'Drone {i + 1} Initial Position')
 
-            # Add a legend entry for this agent
-            ax.plot([], [], color=color, label=agent.identifier, marker='o')
+            lines.append(flight_path_line)
+            scatters.append(scatter)
+            start_scatters.append(start_scatter)
 
-        ax.legend()
+        # reshape this color too maybe
+        goal_scatter = ax.scatter([], [], c=Graph.colors[-1], marker='$*$', s=100, label="Target")
+        goal_scatter.set_offsets(data.config["goal"])
 
-        # Set equal aspect ratio
-        ax.set_aspect('equal', adjustable='datalim')
+        def init():
+            ax.set_xlabel('x')
+            ax.set_ylabel('y')
+            ax.set_ylim(0, 100)  # todo: add these to config
+            ax.set_xticks(range(-20, 130, 10))
 
-        # Show the plot
-        plt.show()
+            for dashed_line, scatter in zip(lines, scatters):
+                dashed_line.set_data([], [])
+                scatter.set_offsets(np.empty((0, 2)))
+            handles, labels = ax.get_legend_handles_labels()
+            ax.legend(handles=handles, labels=labels, loc="upper left", labelspacing=0.6, fontsize=10)
+            return lines + scatters + start_scatters
 
-    @staticmethod
-    def plot_animated(agents, frames_per_round=16):
-        fig, ax = plt.subplots()
+        def animate(frame):
+            for i, (dashed_line, scatter) in enumerate(zip(lines, scatters)):
+                all_positions = data.agents[i]["position_history"]
 
-        def update(frame):
-            ax.clear()
-            for idx, agent in enumerate(agents):
-                color = Graph.colors[idx % len(Graph.colors)]
+                dashed_line.set_data([x for x, y in all_positions[:frame + 1]],
+                                     [y for x, y in all_positions[:frame + 1]])
+                start_x, start_y = all_positions[frame]  # todo: unhardcode this
+                scatter.set_offsets([start_x, start_y])
+            if frame == data.config["rounds"] - 1:
+                plt.savefig(f'{data.directory}/last.svg', bbox_inches='tight')
 
-                # todo: there has to be some way to interpolate x and y at the same time thru numpy
-                agent_position_history = np.array(agent.position_history)
-                frame_datapoints = np.arange(0, len(agent_position_history) * frames_per_round, frames_per_round)
+            return lines + scatters
 
-                interpolated_x = np.interp(frame, frame_datapoints, agent_position_history[:, 0])
-                interpolated_y = np.interp(frame, frame_datapoints, agent_position_history[:, 1])
-
-                ax.plot(interpolated_x, interpolated_y, color=color, marker='o')
-                ax.plot([], [], color=color, label=agent.identifier, marker='o')
-
-            ax.legend()
-            ax.set_aspect('equal', adjustable='datalim')
-
-        frame_count = max(len(agent.position_history) for agent in agents) * frames_per_round
-        anim = FuncAnimation(fig, update, frames=frame_count, interval=200)
-
-        # Show the animated plot
+        ani = FuncAnimation(fig, animate, frames=data.config["rounds"], init_func=init, blit=False)
+        ani.save(f'{data.directory}/animation.gif', fps=20)
         plt.show()
