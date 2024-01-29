@@ -4,7 +4,7 @@
     "max_velocity":     10.0,
     "safe_distance":    2.0,
     "rounds":           10,
-    "agent":      5,
+    "agents":           5,
     "model":            "gpt-3.5-turbo-0613",
 
 
