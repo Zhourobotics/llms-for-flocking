@@ -1,8 +1,8 @@
 from openai import OpenAI
 
 import json
-
 import prompts
+
 from keys import get_key
 
 
@@ -44,7 +44,15 @@ class FlockingAgent(Agent):
 
         self.memory.append({"role": "user", "content": message})
 
-        completion = self.client.chat.completions.create(model=config["model"], messages=self.memory)
+        # avoid running into a token limit, get the first two
+        # prompts (context, and description) and last six prompts (latest pos history)
+        summarized_history = self.memory
+        memory_limit = 6  # todo: pull magic number out
+        if len(summarized_history) > 2 + memory_limit:
+            summarized_history = self.memory[:2] + self.memory[-memory_limit:]
+
+        completion = self.client.chat.completions.create(model=config["model"], messages=summarized_history)
+
         self.memory.append({"role": "assistant", "content": completion.choices[0].message.content})
         self.latest = completion.choices[0].message.content
 
