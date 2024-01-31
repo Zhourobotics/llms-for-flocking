@@ -54,7 +54,11 @@ class FlockingAgent(Agent):
         self.latest = completion.choices[0].message.content
 
     def update(self):
-        self.position = json.loads(self.latest.split("\nPosition: ")[1])
+        exact_position = json.loads(self.latest.split("\nPosition: ")[1])
+        self.position = [  # round position to two decimal places
+            round(exact_position[0], 2),
+            round(exact_position[1], 2)
+        ]
         self.position_history.append(self.position)
 
     def __str__(self):

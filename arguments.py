@@ -14,7 +14,17 @@ def gen_parser():
                         help="Goal x position")
     parser.add_argument("--goal_y", "-gy", type=float, default=50.0,
                         help="Goal y position")
-    # todo: add place agents can spawn in as args
+
+    parser.add_argument("--spawn_x_min", "-sxmi", type=float, default=1.0,
+                        help="Lower bound of the agent's random spawn range's x coordinate")
+    parser.add_argument("--spawn_x_max", "-sxma", type=float, default=20.0,
+                        help="Upper bound of the agent's random spawn range's x coordinate")
+
+    parser.add_argument("--spawn_y_min", "-symi", type=float, default=1.0,
+                        help="Lower bound of the agent's random spawn range's y coordinate")
+    parser.add_argument("--spawn_y_max", "-syma", type=float, default=20.0,
+                        help="Upper bound of the agent's random spawn range's y coordinate")
+
     parser.add_argument("--shape", "-s", type=str, default="line",
                         help="Shape flock will attempt to form")
     parser.add_argument("--max_velocity", "-v", type=float, default=10.0,
