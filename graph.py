@@ -32,7 +32,7 @@ class Graph:
             flight_path_line, = ax.plot([], [], lw=2, color=current_color, linestyle='--')
             lines.append(flight_path_line)
 
-            scatter = ax.scatter([], [], marker='o', c=current_color.reshape(1, -1), s=100, alpha=0.5, label=f'Drone {i + 1}')
+            scatter = ax.scatter([], [], marker='o', c=current_color.reshape(1, -1), s=50, alpha=0.8, label=f'Drone {i + 1}')
             scatters.append(scatter)
 
         goal_scatter = ax.scatter([], [], c="#2e222f", marker='$*$', s=100, label="Goal")
