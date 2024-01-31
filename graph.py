@@ -21,7 +21,6 @@ class Graph:
 
     @staticmethod
     def plot_animated(data):
-        # forgive me
         fig, ax = plt.subplots(figsize=(8, 4))
 
         lines = []
@@ -46,6 +45,7 @@ class Graph:
         def init():
             ax.set_xlabel('x')
             ax.set_ylabel('y')
+
             if not data.settings.follow_agents:
                 ax.set_ylim(data.settings.y_min, data.settings.y_max)
                 ax.set_xticks(range(data.settings.x_min, data.settings.x_max, data.settings.x_ticks))
@@ -55,6 +55,7 @@ class Graph:
             for dashed_line, scatter in zip(lines, scatters):
                 dashed_line.set_data([], [])
                 scatter.set_offsets(np.empty((0, 2)))
+
             handles, labels = ax.get_legend_handles_labels()
             ax.legend(handles=handles, labels=labels, loc="upper left", labelspacing=0.6, fontsize=10)
             return lines + scatters + start_scatters
