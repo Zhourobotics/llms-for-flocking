@@ -24,7 +24,7 @@ class Agent:
     def define_system(self):
         pass
 
-    async def prompt(self, message, model):
+    async def prompt(self, message, model, memory_limit):
         pass
 
     def update(self):
@@ -38,13 +38,12 @@ class FlockingAgent(Agent):
     def define_system(self):
         self.memory.append({"role": "system", "content": prompts.Flocking.agent_role})
 
-    async def prompt(self, message, model):
+    async def prompt(self, message, model, memory_limit):
         self.memory.append({"role": "user", "content": message})
 
         # avoid running into a token limit, get the first two
         # prompts (context, and description) and last six prompts (latest pos history)
         summarized_history = self.memory
-        memory_limit = 6  # todo: pull magic number out
         if len(summarized_history) > 2 + memory_limit:
             summarized_history = self.memory[:2] + self.memory[-memory_limit:]
 
