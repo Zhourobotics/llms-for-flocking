@@ -22,7 +22,7 @@ async def main():
         # ...and add them to the list
         for i in range(args.agents):
             agents.append(FlockingAgent(i, [
-                round(random.uniform(args.spawn_x_min, args.spawn_x_max), 2),  # todo: add place agent can spawn in as args
+                round(random.uniform(args.spawn_x_min, args.spawn_x_max), 2),
                 round(random.uniform(args.spawn_y_min, args.spawn_y_max), 2),
             ]))
 
@@ -66,7 +66,7 @@ async def main():
                 )
 
                 # ask agent where to move (coroutine)
-                coroutines.append(agent.prompt(message + " " + prompts.Flocking.output_format, args.model))
+                coroutines.append(agent.prompt(message + " " + prompts.Flocking.output_format, args.model, args.memory))
 
                 print(agent.latest)  # debug line
                 print("---------\n")  # debug line
