@@ -35,21 +35,21 @@ def gen_parser():
                         help="Number of rounds for the simulation to run")
     parser.add_argument("--agents", "-a", type=int, default=5,
                         help="Number of agents in the simulation")
-    parser.add_argument("--memory", type=int, default=6,
+    parser.add_argument("--memory_limit", "-mlim", type=int, default=6,
                         help="Message history each agent remembers")
-    parser.add_argument("--model", type=str, default="gpt-3.5-turbo-0613",  # gpt-4-1106-preview
+    parser.add_argument("--model", "-gpt", type=str, default="gpt-3.5-turbo-0613",  # gpt-4-1106-preview
                         help="Message history each agent remembers")
     # For plotting
     parser.add_argument("--follow_agents", action="store_true",
                         help="If the plot should adjust the dataview based on agent positions")
-    parser.add_argument("--x_min", type=int, default=-20,
+    parser.add_argument("--x_min", "-pxmi", type=int, default=-20,
                         help="Left-side bound of plot")
-    parser.add_argument("--x_max", type=int, default=130,
+    parser.add_argument("--x_max", "-pxma", type=int, default=130,
                         help="Right-side bound of plot")
-    parser.add_argument("--x_ticks", type=int, default=10,
+    parser.add_argument("--x_ticks", "-pxmt", type=int, default=10,
                         help="How many ticks to count up by on the plots x-axis")
-    parser.add_argument("--y_min", type=int, default=0,
+    parser.add_argument("--y_min", "-pymi", type=int, default=0,
                         help="Lower bound of plot")
-    parser.add_argument("--y_max", type=int, default=100,
+    parser.add_argument("--y_max", "-pyma", type=int, default=100,
                         help="Upper bound of plot")
     return parser
