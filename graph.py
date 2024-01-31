@@ -49,6 +49,8 @@ class Graph:
             if not data.settings.follow_agents:
                 ax.set_ylim(data.settings.y_min, data.settings.y_max)
                 ax.set_xticks(range(data.settings.x_min, data.settings.x_max, data.settings.x_ticks))
+            else:
+                ax.set_aspect('equal', adjustable='datalim')  # todo: make this actually follow agents
 
             for dashed_line, scatter in zip(lines, scatters):
                 dashed_line.set_data([], [])
@@ -59,9 +61,6 @@ class Graph:
             return lines + scatters + start_scatters
 
         def update(frame):
-            if data.settings.follow_agents:
-                ax.set_aspect('equal', adjustable='datalim')
-
             for i, (dashed_line, scatter) in enumerate(zip(lines, scatters)):
                 all_positions = data.agents[i]["position_history"]
 
