@@ -74,5 +74,5 @@ class Graph:
             return lines + scatters
 
         ani = FuncAnimation(fig, update, frames=data.settings.rounds, init_func=init, blit=False)
-        ani.save(f'{data.directory}/animation.gif', fps=20)
+        ani.save(f'{data.directory}/animation.gif', fps=15)
         plt.show()
