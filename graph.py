@@ -9,8 +9,8 @@ matplotlib.use("TkAgg")
 
 
 class Graph:
-    # todo: prettier colors
-    colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'cyan', 'magenta', 'brown', 'black']
+    # red, maroon, yellow, forest, blue, cyan, darkpink
+    colors = ['#e83b3b', '#7a3045', '#f9c22b', '#165a4c', '#4d9be6', '#30e1b9', '#c32454']
 
     @staticmethod
     def plot_animated(data):
@@ -23,22 +23,21 @@ class Graph:
 
         for i in range(data.settings.agents):
             current_color = Graph.colors[i % 8]
-            flight_path_line, = ax.plot([], [], lw=2, color=current_color, label=f'Drone {i + 1} Path',
-                                        linestyle='--', )
+            flight_path_line, = ax.plot([], [], lw=2, color=current_color, linestyle='--')
             # reshape color here but whatevs
             scatter = ax.scatter([], [], marker='o', c=current_color, s=50)
 
             start_pos = data.agents[i]["position_history"][0]
             # reshape this too
             start_scatter = ax.scatter(start_pos[0], start_pos[1], alpha=0.5, color=current_color, s=100, marker='o',
-                                       label=f'Drone {i + 1} Initial Position')
+                                       label=f'Drone {i + 1}')
 
             lines.append(flight_path_line)
             scatters.append(scatter)
             start_scatters.append(start_scatter)
 
         # reshape this color too maybe
-        goal_scatter = ax.scatter([], [], c=Graph.colors[-1], marker='$*$', s=100, label="Target")
+        goal_scatter = ax.scatter([], [], c="#2e222f", marker='$*$', s=100, label="Target")
         goal_scatter.set_offsets([data.settings.goal_x, data.settings.goal_y])
 
         def init():
