@@ -66,7 +66,7 @@ async def main():
                 )
 
                 # ask agent where to move (coroutine)
-                coroutines.append(agent.prompt(message + " " + prompts.Flocking.output_format, args.model, args.memory))
+                coroutines.append(agent.prompt(message + " " + prompts.Flocking.output_format, args.model, args.memory_limit))
 
                 print(agent.latest)  # debug line
                 print("---------\n")  # debug line
