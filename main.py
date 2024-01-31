@@ -75,8 +75,10 @@ async def main():
                 print(f"Time for this round is {time_lapse:.2f}")
                 print("\n\n\n")
 
+            print("Drone Positions:")
             for agent in agents:
                 print("{}: {}".format(agent.identifier, agent.position_history))
+            print("\n")
 
             # Save Data
             Data.save(agents, args, identifier=args.name)
