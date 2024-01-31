@@ -49,8 +49,6 @@ class Graph:
             if not data.settings.follow_agents:
                 ax.set_ylim(data.settings.y_min, data.settings.y_max)
                 ax.set_xticks(range(data.settings.x_min, data.settings.x_max, data.settings.x_ticks))
-            else:
-                ax.set_aspect('equal', adjustable='datalim')
 
             for dashed_line, scatter in zip(lines, scatters):
                 dashed_line.set_data([], [])
@@ -60,7 +58,10 @@ class Graph:
             ax.legend(handles=handles, labels=labels, loc="upper left", labelspacing=0.6, fontsize=10)
             return lines + scatters + start_scatters
 
-        def animate(frame):
+        def update(frame):
+            if data.settings.follow_agents:
+                ax.set_aspect('equal', adjustable='datalim')
+
             for i, (dashed_line, scatter) in enumerate(zip(lines, scatters)):
                 all_positions = data.agents[i]["position_history"]
 
@@ -73,6 +74,6 @@ class Graph:
 
             return lines + scatters
 
-        ani = FuncAnimation(fig, animate, frames=data.settings.rounds, init_func=init, blit=False)
+        ani = FuncAnimation(fig, update, frames=data.settings.rounds, init_func=init, blit=False)
         ani.save(f'{data.directory}/animation.gif', fps=20)
         plt.show()
