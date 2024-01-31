@@ -3,8 +3,9 @@ class Flocking:
     game_description = (
         "There are other drones in the space, and you must coordinate with each other to reach a goal position, "
         "forming a flock of a specified shape during the process. Keep in mind Boids flocking rules. Your position is: "
-        "[{}]. The positions of the other drones are: [{}]. The goal position is [{}]. The maximum velocity is [{}] "
-        "units per round. The flock shape is a [{}]. The safe distance between each drone is [{}] units. "
+        "[{}]. The positions of the other drones (in the format [[x, y], [x, y]...]) are: [{}]. The goal position "
+        "is [{}]. The maximum velocity is [{}] units per round. The flock shape is a [{}]. The safe distance between "
+        "each drone is [{}] units. "
 
         "You need to choose a position to move to in order to reach the goal and form a flock, and briefly explain "
         "the reasoning behind your decision."
