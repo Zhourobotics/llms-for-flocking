@@ -16,7 +16,7 @@ class Graph:
         [0x16, 0x5a, 0x4c],  # forest green
         [0x4d, 0x9b, 0xe6],  # blue
         [0x30, 0xe1, 0xb9],  # cyan
-        [0xc3, 0x24, 0x54]   # dark pink
+        [0xc3, 0x24, 0x54]  # dark pink
     ]) / 255
 
     @staticmethod
@@ -25,32 +25,25 @@ class Graph:
 
         lines = []
         scatters = []
-        start_scatters = []
 
         for i in range(data.settings.agents):
             current_color = Graph.colors[i % len(Graph.colors)]
+
             flight_path_line, = ax.plot([], [], lw=2, color=current_color, linestyle='--')
-            scatter = ax.scatter([], [], marker='o', c=current_color.reshape(1, -1), s=50)
-
-            start_pos = data.agents[i]["position_history"][0]
-            start_scatter = ax.scatter(start_pos[0], start_pos[1], alpha=0.5, color=current_color.reshape(1, -1), s=100, marker='o',label=f'Drone {i + 1}')
-
             lines.append(flight_path_line)
-            scatters.append(scatter)
-            start_scatters.append(start_scatter)
 
-        goal_scatter = ax.scatter([], [], c="#2e222f", marker='$*$', s=100, label="Target")
+            scatter = ax.scatter([], [], marker='o', c=current_color.reshape(1, -1), s=100, alpha=0.5, label=f'Drone {i + 1}')
+            scatters.append(scatter)
+
+        goal_scatter = ax.scatter([], [], c="#2e222f", marker='$*$', s=100, label="Goal")
         goal_scatter.set_offsets([data.settings.goal_x, data.settings.goal_y])
 
         def init():
             ax.set_xlabel('x')
             ax.set_ylabel('y')
 
-            if not data.settings.follow_agents:
-                ax.set_ylim(data.settings.y_min, data.settings.y_max)
-                ax.set_xticks(range(data.settings.x_min, data.settings.x_max, data.settings.x_ticks))
-            else:
-                ax.set_aspect('equal', adjustable='datalim')  # todo: make this actually follow agents
+            ax.set_ylim(data.settings.y_min, data.settings.y_max)
+            ax.set_xticks(range(data.settings.x_min, data.settings.x_max, data.settings.x_ticks))
 
             for dashed_line, scatter in zip(lines, scatters):
                 dashed_line.set_data([], [])
@@ -58,7 +51,7 @@ class Graph:
 
             handles, labels = ax.get_legend_handles_labels()
             ax.legend(handles=handles, labels=labels, loc="upper left", labelspacing=0.6, fontsize=10)
-            return lines + scatters + start_scatters
+            return lines + scatters
 
         def update(frame):
             for i, (dashed_line, scatter) in enumerate(zip(lines, scatters)):
@@ -66,11 +59,11 @@ class Graph:
 
                 dashed_line.set_data([x for x, y in all_positions[max(0, frame - 3):frame + 1]],
                                      [y for x, y in all_positions[max(0, frame - 3):frame + 1]])
-                start_x, start_y = all_positions[frame]
-                scatter.set_offsets([start_x, start_y])
+                latest_x, latest_y = all_positions[frame]
+                scatter.set_offsets([latest_x, latest_y])
+
             if frame == data.settings.rounds - 1:
                 plt.savefig(f'{data.directory}/last.svg', bbox_inches='tight')
-
             return lines + scatters
 
         ani = FuncAnimation(fig, update, frames=data.settings.rounds, init_func=init, blit=False)

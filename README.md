@@ -25,5 +25,4 @@ usage: main.py --mode {run, plot} --name TEST_NAME
                [--model GPT_MODEL] [--memory_limit MEMORY_LIMIT]
                [--x_min X_MIN] [--x_max X_MAX] [--x_ticks X_TICKS]
                [--y_min Y_MIN] [--y_max Y_MAX]
-               [--follow_agents]
 ```
