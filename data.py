@@ -46,11 +46,20 @@ class Data:
             print(f'Error: Test {identifier} already exists!')
 
     @staticmethod
-    def load(identifier, results="results"):
+    def load(args, results="results"):
         # todo: error handling
-        file = open(f'./{results}/{identifier}/results', 'rb')
+        file = open(f'./{results}/{args.name}/results', 'rb')
         data = pickle.load(file)
-        print(f'Success: Load test {identifier}!')
+
+        # Load plot settings in :)
+        data.settings.follow_agents = args.follow_agents
+        data.settings.x_min = args.x_min
+        data.settings.x_max = args.x_max
+        data.settings.x_ticks = args.x_ticks
+        data.settings.y_min = args.y_min
+        data.settings.y_max = args.y_max
+
+        print(f'Success: Load test {args.name}!')
         return data
 
     @staticmethod
