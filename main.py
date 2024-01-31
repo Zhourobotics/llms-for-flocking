@@ -1,5 +1,3 @@
-from openai import OpenAI
-
 import asyncio
 import random
 import time
@@ -9,87 +7,92 @@ from graph import *
 import prompts
 
 from data import Data
+from arguments import gen_parser
 
 
 async def main():
-    with open('config.json', 'r') as json_file:
-        config = json.load(json_file)
+    parser = gen_parser()
+    args = parser.parse_args()
 
-    agents = []
+    if args.mode == "run":
+        # todo: check if args.name doesnt exist
+        # create our list of agents
+        agents = []
 
-    # we create our list of agents and add them to the list
-    for i in range(config["agents"]):
-        agents.append(FlockingAgent(i, [
-            round(random.uniform(1.0, 10.0), 2),
-            round(random.uniform(1.0, 10.0), 2),
-        ]))
+        # ...and add them to the list
+        for i in range(args.agents):
+            agents.append(FlockingAgent(i, [
+                round(random.uniform(1.0, 10.0), 2),  # todo: add place agent can spawn in as args
+                round(random.uniform(1.0, 10.0), 2),
+            ]))
 
-    # todo: prettyprint!
-    # todo: better err. handling
+        # todo: prettyprint!
+        # todo: better err. handling
 
-    for r in range(config["rounds"]):
-        tick = time.time()
-        if not all(agent.position == agents[0].position for agent in agents):
-            print("===ROUND {} ===".format(r))
-            coroutines = []
-            for agent in agents:
-                other_agent_positions = "{}".format(", ".join(
-                    map(lambda a: str(a.position), filter(lambda a: a.identifier != agent.identifier, agents))))
+        for r in range(args.rounds):
+            tick = time.time()
+            if not all(agent.position == agents[0].position for agent in agents):
+                print("===ROUND {} ===".format(r))
+                coroutines = []
+                for agent in agents:
+                    other_agent_positions = "{}".format(", ".join(
+                        map(lambda a: str(a.position), filter(lambda a: a.identifier != agent.identifier, agents))))
 
-                if r > 0:
-                    message = prompts.Flocking.get_round_description(
-                        agent.position,
-                        other_agent_positions,
-                        [float(config["goal"][0]), float(config["goal"][1])],
+                    if r > 0:
+                        message = prompts.Flocking.get_round_description(
+                            agent.position,
+                            other_agent_positions,
+                            [args.goal_x, args.goal_y],
+                        )
+                    else:
+                        message = prompts.Flocking.get_game_description(
+                            agent.position,
+                            other_agent_positions,
+                            [args.goal_x, args.goal_y],
+                            args.max_velocity,
+                            args.shape,
+                            args.safe_distance
+                        )
+
+                    print("---------")  # debug line
+                    print("AGENT", agent.identifier)  # debug line
+
+                    # you guessed it (debug)
+                    print(
+                        "Position: {}\nPeers: {}".format(
+                            agent.position,
+                            "[{}]".format(other_agent_positions),
+                        )
                     )
-                else:
-                    message = prompts.Flocking.get_game_description(
-                        agent.position,
-                        other_agent_positions,
-                        [float(config["goal"][0]), float(config["goal"][1])],
-                        float(config["max_velocity"]),
-                        config["flock_shape"],
-                        float(config["safe_distance"])
-                    )
 
-                print("---------")  # debug line
-                print("AGENT", agent.identifier)  # debug line
+                    # ask agent where to move (coroutine)
+                    coroutines.append(agent.prompt(message + " " + prompts.Flocking.output_format, args.model))
 
-                # you guessed it (debug)
-                print(
-                    "Position: {}\nPeers: {}".format(
-                        agent.position,
-                        "[{}]".format(other_agent_positions),
-                    )
-                )
+                    print(agent.latest)  # debug line
+                    print("---------\n")  # debug line
 
-                # ask agent where to move (coroutine)
-                coroutines.append(agent.prompt(message + " " + prompts.Flocking.output_format))
+                try:
+                    # wait for coroutines to finish
+                    await asyncio.gather(*coroutines)
+                    # update each agent's location!
+                    list(map(lambda agent: agent.update(), agents))
 
-                print(agent.latest)  # debug line
-                print("---------\n")  # debug line
+                except Exception as e:
+                    print(f"Error: {e}. Error in an agent's response format or failed to move agent!")
+            else:
+                print(f"Consensus reached on round {r - 1}")
+            time_lapse = time.time() - tick
+            print(f"Time for this round is {time_lapse:.2f}")
 
-            try:
-                # wait for coroutines to finish
-                await asyncio.gather(*coroutines)
-                # update each agent's location!
-                list(map(lambda agent: agent.update(), agents))
+        for agent in agents:
+            print("{}: {}".format(agent.identifier, agent.position_history))
 
-            except Exception as e:
-                print(f"Error: {e}. Error in an agent's response format or failed to move agent!")
-        else:
-            print(f"Consensus reached on round {r - 1}")
-        time_lapse = time.time() - tick
-        print(f"Time for this round is {time_lapse:.2f}")
-
-    for agent in agents:
-        print("{}: {}".format(agent.identifier, agent.position_history))
-
-    # Save Data
-    results = Data.save(agents, config)
+        # Save Data
+        Data.save(agents, args, identifier=args.name)
 
     # Animate Final Graph
-    Graph.plot_animated(Data.load(results))
+    # todo: make sure args.name exists!
+    Graph.plot_animated(Data.load(args.name))
 
 if __name__ == "__main__":
     asyncio.run(main())

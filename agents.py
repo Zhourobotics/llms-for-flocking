@@ -24,7 +24,7 @@ class Agent:
     def define_system(self):
         pass
 
-    async def prompt(self, message):
+    async def prompt(self, message, model):
         pass
 
     def update(self):
@@ -38,10 +38,7 @@ class FlockingAgent(Agent):
     def define_system(self):
         self.memory.append({"role": "system", "content": prompts.Flocking.agent_role})
 
-    async def prompt(self, message):
-        with open('config.json', 'r') as json_file:
-            config = json.load(json_file)
-
+    async def prompt(self, message, model):
         self.memory.append({"role": "user", "content": message})
 
         # avoid running into a token limit, get the first two
@@ -51,7 +48,7 @@ class FlockingAgent(Agent):
         if len(summarized_history) > 2 + memory_limit:
             summarized_history = self.memory[:2] + self.memory[-memory_limit:]
 
-        completion = self.client.chat.completions.create(model=config["model"], messages=summarized_history)
+        completion = self.client.chat.completions.create(model=model, messages=summarized_history)
 
         self.memory.append({"role": "assistant", "content": completion.choices[0].message.content})
         self.latest = completion.choices[0].message.content
