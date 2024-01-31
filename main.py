@@ -92,7 +92,7 @@ async def main():
 
     # Animate Final Graph
     # todo: make sure args.name exists!
-    Graph.plot_animated(Data.load(args.name))
+    Graph.plot_animated(Data.load(args))
 
 if __name__ == "__main__":
     asyncio.run(main())

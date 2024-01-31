@@ -44,8 +44,11 @@ class Graph:
         def init():
             ax.set_xlabel('x')
             ax.set_ylabel('y')
-            ax.set_ylim(data.settings.y_min, data.settings.y_max)  # todo: disable maybe if we're running in follow mode
-            ax.set_xticks(range(data.settings.x_min, data.settings.x_max, data.settings.x_ticks))
+            if not data.settings.follow_agents:
+                ax.set_ylim(data.settings.y_min, data.settings.y_max)
+                ax.set_xticks(range(data.settings.x_min, data.settings.x_max, data.settings.x_ticks))
+            else:
+                ax.set_aspect('equal', adjustable='datalim')
 
             for dashed_line, scatter in zip(lines, scatters):
                 dashed_line.set_data([], [])
@@ -60,7 +63,7 @@ class Graph:
 
                 dashed_line.set_data([x for x, y in all_positions[:frame + 1]],
                                      [y for x, y in all_positions[:frame + 1]])
-                start_x, start_y = all_positions[frame]  # todo: unhardcode this
+                start_x, start_y = all_positions[frame]
                 scatter.set_offsets([start_x, start_y])
             if frame == data.settings.rounds - 1:
                 plt.savefig(f'{data.directory}/last.svg', bbox_inches='tight')
