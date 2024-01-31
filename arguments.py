@@ -40,8 +40,6 @@ def gen_parser():
     parser.add_argument("--model", "-gpt", type=str, default="gpt-3.5-turbo-0613",  # gpt-4-1106-preview
                         help="Message history each agent remembers")
     # For plotting
-    parser.add_argument("--follow_agents", action="store_true",
-                        help="If the plot should adjust the dataview based on agent positions")
     parser.add_argument("--x_min", "-pxmi", type=int, default=-20,
                         help="Left-side bound of plot")
     parser.add_argument("--x_max", "-pxma", type=int, default=130,
