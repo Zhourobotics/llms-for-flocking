@@ -52,18 +52,14 @@ async def main():
                             args.safe_distance
                         )
 
-                    print("------------------------------------")
-
-                    print("AGENT", agent.identifier)
-                    print("Position: {}\nPeers: {}".format(agent.position, "[{}]".format(other_agent_positions)))
-
                     # ask agent where to move (coroutine)
                     coroutines.append(
                         agent.prompt(message + " " + prompts.Flocking.output_format, args.model, args.memory_limit))
 
-                    # print out reasoning
-                    print(agent.latest)
-
+                    print("------------------------------------")
+                    print("AGENT", agent.identifier + 1)
+                    print(agent.latest)  # print out reasoning (this includes the position)
+                    print("Peers: {}".format("[{}]".format(other_agent_positions)))
                     print("------------------------------------\n")
 
                 try:
@@ -77,6 +73,7 @@ async def main():
 
                 time_lapse = time.time() - tick
                 print(f"Time for this round is {time_lapse:.2f}")
+                print("\n\n\n")
 
             for agent in agents:
                 print("{}: {}".format(agent.identifier, agent.position_history))
