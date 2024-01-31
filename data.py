@@ -47,7 +47,6 @@ class Data:
 
     @staticmethod
     def load(args, results="results"):
-        # todo: error handling
         file = open(f'./{results}/{args.name}/results', 'rb')
         data = pickle.load(file)
 
