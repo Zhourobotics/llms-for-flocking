@@ -52,7 +52,6 @@ class Data:
         data = pickle.load(file)
 
         # Load plot settings in :)
-        data.settings.follow_agents = args.follow_agents
         data.settings.x_min = args.x_min
         data.settings.x_max = args.x_max
         data.settings.x_ticks = args.x_ticks
