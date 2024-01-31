@@ -64,8 +64,8 @@ class Graph:
             for i, (dashed_line, scatter) in enumerate(zip(lines, scatters)):
                 all_positions = data.agents[i]["position_history"]
 
-                dashed_line.set_data([x for x, y in all_positions[:frame + 1]],
-                                     [y for x, y in all_positions[:frame + 1]])
+                dashed_line.set_data([x for x, y in all_positions[max(0, frame - 3):frame + 1]],
+                                     [y for x, y in all_positions[max(0, frame - 3):frame + 1]])
                 start_x, start_y = all_positions[frame]
                 scatter.set_offsets([start_x, start_y])
             if frame == data.settings.rounds - 1:
