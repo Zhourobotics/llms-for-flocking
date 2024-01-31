@@ -15,9 +15,9 @@ class Flocking:
         "Keeping in mind your maximum velocity, please select a new position to move to."
     )
     output_format = (
-        "Strictly follow the 'Reasoning:..., Position: [x, y]' format to provide your answer; briefly "
-        "providing your thought process in the reasoning section while keeping the position section ONLY "
-        "for the position you wish to move to this iteration, without any further explanation."
+        "Strictly follow the 'Reasoning:..., Position: [x, y]' format to provide your answer. x and y must both be "
+        "floating point numbers. Briefly providing your thought process in the reasoning section while keeping the "
+        "position section ONLY for the position you wish to move to this iteration, without any further explanation."
     )
 
     @staticmethod
