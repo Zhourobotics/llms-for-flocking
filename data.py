@@ -8,17 +8,17 @@ class Data:
     """
     A class to facilitate storage and retrieval of test data
     """
-    def __init__(self, identifier, agents, config, results):
+    def __init__(self, identifier, agents, settings, results):
         self.identifier = identifier
         self.directory = f'./{results}/{identifier}'
         self.agents = agents
-        self.config = config
+        self.settings = settings
         self.results = results
 
     @staticmethod
     def save(
             agents,
-            config,
+            settings,
             identifier=datetime.now().strftime("%y%b%d%H%M%S").lower(),
             results="results"
     ) -> str:
@@ -37,7 +37,7 @@ class Data:
                 } for agent in agents
             ]
 
-            pickle.dump(Data(identifier, agents_object, config, results), file)
+            pickle.dump(Data(identifier, agents_object, settings, results), file)
 
             file.close()
             print(f'Success: Save test {identifier}!')

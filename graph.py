@@ -21,7 +21,7 @@ class Graph:
         scatters = []
         start_scatters = []
 
-        for i in range(data.config["agents"]):
+        for i in range(data.settings.agents):
             current_color = Graph.colors[i % 8]
             flight_path_line, = ax.plot([], [], lw=2, color=current_color, label=f'Drone {i + 1} Path',
                                         linestyle='--', )
@@ -39,13 +39,13 @@ class Graph:
 
         # reshape this color too maybe
         goal_scatter = ax.scatter([], [], c=Graph.colors[-1], marker='$*$', s=100, label="Target")
-        goal_scatter.set_offsets(data.config["goal"])
+        goal_scatter.set_offsets([data.settings.goal_x, data.settings.goal_y])
 
         def init():
             ax.set_xlabel('x')
             ax.set_ylabel('y')
-            ax.set_ylim(0, 100)  # todo: add these to config
-            ax.set_xticks(range(-20, 130, 10))
+            ax.set_ylim(data.settings.y_min, data.settings.y_max)  # todo: disable maybe if we're running in follow mode
+            ax.set_xticks(range(data.settings.x_min, data.settings.x_max, data.settings.x_ticks))
 
             for dashed_line, scatter in zip(lines, scatters):
                 dashed_line.set_data([], [])
@@ -62,11 +62,11 @@ class Graph:
                                      [y for x, y in all_positions[:frame + 1]])
                 start_x, start_y = all_positions[frame]  # todo: unhardcode this
                 scatter.set_offsets([start_x, start_y])
-            if frame == data.config["rounds"] - 1:
+            if frame == data.settings.rounds - 1:
                 plt.savefig(f'{data.directory}/last.svg', bbox_inches='tight')
 
             return lines + scatters
 
-        ani = FuncAnimation(fig, animate, frames=data.config["rounds"], init_func=init, blit=False)
+        ani = FuncAnimation(fig, animate, frames=data.settings.rounds, init_func=init, blit=False)
         ani.save(f'{data.directory}/animation.gif', fps=20)
         plt.show()
