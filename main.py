@@ -3,12 +3,12 @@ import random
 import time
 import os
 
-from agents import *
-from graph import *
-import prompts
-
+from agents import FlockingAgent
+from graph import Graph
 from data import Data
+
 from arguments import gen_parser
+import prompts
 
 
 async def main():
@@ -28,7 +28,7 @@ async def main():
                 ]))
 
             for r in range(args.rounds):
-                print("======ROUND {}/{}======".format(r+1, args.rounds))
+                print("======ROUND {}/{}======".format(r + 1, args.rounds))
                 coroutines = []
                 tick = time.time()
 
@@ -58,12 +58,13 @@ async def main():
                     print("Position: {}\nPeers: {}".format(agent.position, "[{}]".format(other_agent_positions)))
 
                     # ask agent where to move (coroutine)
-                    coroutines.append(agent.prompt(message + " " + prompts.Flocking.output_format, args.model, args.memory_limit))
+                    coroutines.append(
+                        agent.prompt(message + " " + prompts.Flocking.output_format, args.model, args.memory_limit))
 
                     # print out reasoning
                     print(agent.latest)
 
-                    print("------------------------------------\n")  # debug line
+                    print("------------------------------------\n")
 
                 try:
                     # wait for coroutines to finish
@@ -90,6 +91,7 @@ async def main():
         Graph.plot_animated(Data.load(args))
     else:
         print(f'Error: Test {args.name} does not exist!')
+
 
 if __name__ == "__main__":
     asyncio.run(main())
