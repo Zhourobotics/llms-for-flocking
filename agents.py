@@ -42,7 +42,7 @@ class FlockingAgent(Agent):
         self.memory.append({"role": "user", "content": message})
 
         # avoid running into a token limit, get the first two
-        # prompts (context, and description) and last six prompts (latest pos history)
+        # prompts (context, and description) and last few prompts as specified in the arguments (latest pos history)
         summarized_history = self.memory
         if len(summarized_history) > 2 + memory_limit:
             summarized_history = self.memory[:2] + self.memory[-memory_limit:]

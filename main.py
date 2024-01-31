@@ -30,7 +30,7 @@ async def main():
         # todo: better err. handling
 
         for r in range(args.rounds):
-            print("===ROUND {} ===".format(r))
+            print("===ROUND {}/{} ===".format(r, args.rounds))
             coroutines = []
             tick = time.time()
 
