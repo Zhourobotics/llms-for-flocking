@@ -17,6 +17,7 @@ The first ever flocking LLM paper!
 ```
 usage: main.py --mode {run, plot} --name TEST_NAME
                [--rounds AMOUNT_OF_ROUNDS] [--agents AMOUNT_OF_AGENTS]
+               [--seed RANDOM_SEED]
                [--spawn_x_min SPAWN_X_MIN] [--spawn_x_max SPAWN_X_MAX]
                [--spawn_y_min SPAWN_Y_MIN] [--spawn_y_max SPAWN_Y_MAX]
                [--shape FLOCK_SHAPE] [--max_velocity MAX_AGENT_VELOCITY]

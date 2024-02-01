@@ -15,6 +15,9 @@ def gen_parser():
     parser.add_argument("--goal_y", "-gy", type=float, default=50.0,
                         help="Goal y position")
 
+    parser.add_argument("--seed", type=int, default=42,
+                        help="Random seed")
+
     parser.add_argument("--spawn_x_min", "-sxmi", type=float, default=1.0,
                         help="Lower bound of the agent's random spawn range's x coordinate")
     parser.add_argument("--spawn_x_max", "-sxma", type=float, default=20.0,
@@ -25,11 +28,11 @@ def gen_parser():
     parser.add_argument("--spawn_y_max", "-syma", type=float, default=20.0,
                         help="Upper bound of the agent's random spawn range's y coordinate")
 
-    parser.add_argument("--shape", "-s", type=str, default="line",
+    parser.add_argument("--shape", "-s", type=str, default="lattice",
                         help="Shape flock will attempt to form")
     parser.add_argument("--max_velocity", "-v", type=float, default=10.0,
                         help="Maximum velocity agents can travel per round")
-    parser.add_argument("--safe_distance", "-d", type=float, default=2.0,
+    parser.add_argument("--safe_distance", "-d", type=float, default=3.0,
                         help="Minimum distance agents will try to keep from each other")
     parser.add_argument("--rounds", "-r", type=int, default=10,
                         help="Number of rounds for the simulation to run")

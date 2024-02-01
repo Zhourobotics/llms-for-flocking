@@ -8,14 +8,17 @@ class Flocking:
         
         "Your position is: [{}]. The positions of the other drones (in the format [[x, y], [x, y]...]) are: [{}]. "
         "The maximum velocity is [{}] units per round. The flock shape is a [{}]. "
-        "The minimum distance between each drone is [{}] units. "
+        
+        "You may not get closer than [{}] units to any drone, otherwise you will crash. It is crucial to"
+        "always maintain this distance."
 
         "You need to choose a position to move to in order to form a flock, and briefly explain "
         "the reasoning behind your decision."
     )
     round_description = (
         "You have now moved to: [{}]. The new positions of the other drones are: [{}]. "
-        "Keeping in mind your maximum velocity, please select a new position to move to."
+        "Consider how well your strategy worked last round, keeping in mind your maximum velocity, "
+        "please select a new position to move to."
     )
     output_format = (
         "Strictly follow the 'Reasoning:..., Position: [x, y]' format to provide your answer. x and y must both be "

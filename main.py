@@ -10,13 +10,15 @@ from data import Data
 from arguments import gen_parser
 import prompts
 
-
 async def main():
     parser = gen_parser()
     args = parser.parse_args()
 
     if args.mode == "run":
         if not os.path.isfile(f'./results/{args.name}/results'):
+
+            random.seed(args.seed)
+
             # create our list of agents
             agents = []
 
