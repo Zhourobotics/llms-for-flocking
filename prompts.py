@@ -4,13 +4,12 @@ class Flocking:
         "There are other drones in the space, and you must coordinate with each other to form a flock of a specified "
         "shape. Keep in mind Boids flocking rules. "
         
-        "Remember to consider the positions and velocity of other drones and consider how they might behave."
-        
         "Your position is: [{}]. The positions of the other drones (in the format [[x, y], [x, y]...]) are: [{}]. "
         "The maximum velocity is [{}] units per round. The flock shape is a [{}]. "
         
-        "You may not get closer than [{}] units to any drone, otherwise you will crash. It is crucial to"
-        "always maintain this distance."
+        "You must avoid getting closer than [{}] units to any peers, otherwise you may collide. "
+        
+        "Remember to consider the positions and velocity of other drones and consider how they might behave. "
 
         "You need to choose a position to move to in order to form a flock, and briefly explain "
         "the reasoning behind your decision."
