@@ -40,13 +40,11 @@ async def main():
                         message = prompts.Flocking.get_round_description(
                             agent.position,
                             other_agent_positions,
-                            [args.goal_x, args.goal_y],
                         )
                     else:
                         message = prompts.Flocking.get_game_description(
                             agent.position,
                             other_agent_positions,
-                            [args.goal_x, args.goal_y],
                             args.max_velocity,
                             args.shape,
                             args.safe_distance

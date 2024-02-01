@@ -34,10 +34,6 @@ class Graph:
 
             scatter = ax.scatter([], [], marker='o', c=current_color.reshape(1, -1), s=50, alpha=0.8, label=f'Drone {i + 1}')
             scatters.append(scatter)
-
-        goal_scatter = ax.scatter([], [], c="#2e222f", marker='$*$', s=100, label="Goal")
-        goal_scatter.set_offsets([data.settings.goal_x, data.settings.goal_y])
-
         def init():
             ax.set_xlabel('x')
             ax.set_ylabel('y')
