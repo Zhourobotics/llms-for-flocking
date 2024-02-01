@@ -8,7 +8,7 @@ class Flocking:
         
         "Your position is: [{}]. The positions of the other drones (in the format [[x, y], [x, y]...]) are: [{}]. "
         "The maximum velocity is [{}] units per round. The flock shape is a [{}]. "
-        "The safe distance between each drone is [{}] units. "
+        "The minimum distance between each drone is [{}] units. "
 
         "You need to choose a position to move to in order to form a flock, and briefly explain "
         "the reasoning behind your decision."
