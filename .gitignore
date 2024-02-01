@@ -1,9 +1,9 @@
 .env
 __pycache__/
-*$py.class
 pip-log.txt
 pip-delete-this-directory.txt
 secret.yml
+secrets.yml
 .DS_Store
 venv/
 .idea/
