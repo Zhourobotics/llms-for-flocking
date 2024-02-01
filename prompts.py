@@ -1,22 +1,20 @@
 class Flocking:
     agent_role = "You are a drone navigating a two-dimensional space."
     game_description = (
-        "There are other drones in the space, and you must coordinate with each other to reach a goal position, "
-        "forming a flock of a specified shape during the process. Keep in mind Boids flocking rules. "
+        "There are other drones in the space, and you must coordinate with each other to form a flock of a specified "
+        "shape. Keep in mind Boids flocking rules. "
         
-        "Additionally, rather than turning around or barely moving to maintain the flock, consider adjusting your "
-        "velocity and anticipating what the positions of the other drones are going to be."
+        "Remember to consider the positions and velocity of other drones and consider how they might behave."
         
         "Your position is: [{}]. The positions of the other drones (in the format [[x, y], [x, y]...]) are: [{}]. "
-        "The goal position is [{}]. The maximum velocity is [{}] units per round. The flock shape is a [{}]. "
+        "The maximum velocity is [{}] units per round. The flock shape is a [{}]. "
         "The safe distance between each drone is [{}] units. "
 
-        "You need to choose a position to move to in order to reach the goal and form a flock, and briefly explain "
+        "You need to choose a position to move to in order to form a flock, and briefly explain "
         "the reasoning behind your decision."
     )
     round_description = (
         "You have now moved to: [{}]. The new positions of the other drones are: [{}]. "
-        "The flock's final goal position is [{}]. "
         "Keeping in mind your maximum velocity, please select a new position to move to."
     )
     output_format = (
@@ -26,20 +24,18 @@ class Flocking:
     )
 
     @staticmethod
-    def get_game_description(position, other_positions, goal_position, max_velocity, flock_shape, safe_distance):
+    def get_game_description(position, other_positions, max_velocity, flock_shape, safe_distance):
         return Flocking.game_description.format(
             position,
             other_positions,
-            goal_position,
             max_velocity,
             flock_shape,
             safe_distance
         )
 
     @staticmethod
-    def get_round_description(position, other_positions, goal_position):
+    def get_round_description(position, other_positions):
         return Flocking.round_description.format(
             position,
             other_positions,
-            goal_position
         )

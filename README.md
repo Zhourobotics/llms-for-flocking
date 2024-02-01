@@ -16,7 +16,6 @@ The first ever flocking LLM paper!
 ## Usage
 ```
 usage: main.py --mode {run, plot} --name TEST_NAME
-               [--goal_y GOAL_Y] [--goal_x GOAL_X]
                [--rounds AMOUNT_OF_ROUNDS] [--agents AMOUNT_OF_AGENTS]
                [--spawn_x_min SPAWN_X_MIN] [--spawn_x_max SPAWN_X_MAX]
                [--spawn_y_min SPAWN_Y_MIN] [--spawn_y_max SPAWN_Y_MAX]
