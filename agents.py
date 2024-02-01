@@ -24,7 +24,7 @@ class Agent:
     def define_system(self):
         pass
 
-    async def prompt(self, message):
+    async def prompt(self, message, model, memory_limit):
         pass
 
     def update(self):
@@ -38,26 +38,26 @@ class FlockingAgent(Agent):
     def define_system(self):
         self.memory.append({"role": "system", "content": prompts.Flocking.agent_role})
 
-    async def prompt(self, message):
-        with open('config.json', 'r') as json_file:
-            config = json.load(json_file)
-
+    async def prompt(self, message, model, memory_limit):
         self.memory.append({"role": "user", "content": message})
 
         # avoid running into a token limit, get the first two
-        # prompts (context, and description) and last six prompts (latest pos history)
+        # prompts (context, and description) and last few prompts as specified in the arguments (latest pos history)
         summarized_history = self.memory
-        memory_limit = 6  # todo: pull magic number out
         if len(summarized_history) > 2 + memory_limit:
             summarized_history = self.memory[:2] + self.memory[-memory_limit:]
 
-        completion = self.client.chat.completions.create(model=config["model"], messages=summarized_history)
+        completion = self.client.chat.completions.create(model=model, messages=summarized_history)
 
         self.memory.append({"role": "assistant", "content": completion.choices[0].message.content})
         self.latest = completion.choices[0].message.content
 
     def update(self):
-        self.position = json.loads(self.latest.split("\nPosition: ")[1])
+        exact_position = json.loads(self.latest.split("\nPosition: ")[1])
+        self.position = [  # round position to two decimal places
+            round(exact_position[0], 2),
+            round(exact_position[1], 2)
+        ]
         self.position_history.append(self.position)
 
     def __str__(self):

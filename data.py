@@ -8,17 +8,17 @@ class Data:
     """
     A class to facilitate storage and retrieval of test data
     """
-    def __init__(self, identifier, agents, config, results):
+    def __init__(self, identifier, agents, settings, results):
         self.identifier = identifier
         self.directory = f'./{results}/{identifier}'
         self.agents = agents
-        self.config = config
+        self.settings = settings
         self.results = results
 
     @staticmethod
     def save(
             agents,
-            config,
+            settings,
             identifier=datetime.now().strftime("%y%b%d%H%M%S").lower(),
             results="results"
     ) -> str:
@@ -37,7 +37,7 @@ class Data:
                 } for agent in agents
             ]
 
-            pickle.dump(Data(identifier, agents_object, config, results), file)
+            pickle.dump(Data(identifier, agents_object, settings, results), file)
 
             file.close()
             print(f'Success: Save test {identifier}!')
@@ -46,11 +46,18 @@ class Data:
             print(f'Error: Test {identifier} already exists!')
 
     @staticmethod
-    def load(identifier, results="results"):
-        # todo: error handling
-        file = open(f'./{results}/{identifier}/results', 'rb')
+    def load(args, results="results"):
+        file = open(f'./{results}/{args.name}/results', 'rb')
         data = pickle.load(file)
-        print(f'Success: Load test {identifier}!')
+
+        # Load plot settings in :)
+        data.settings.x_min = args.x_min
+        data.settings.x_max = args.x_max
+        data.settings.x_ticks = args.x_ticks
+        data.settings.y_min = args.y_min
+        data.settings.y_max = args.y_max
+
+        print(f'Success: Load test {args.name}!')
         return data
 
     @staticmethod

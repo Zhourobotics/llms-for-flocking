@@ -12,3 +12,17 @@ The first ever flocking LLM paper!
         1: "sk-YourSecondAPIKeyHere"
         2: "sk-YourThirdAPIKeyHere"
     ```
+
+## Usage
+```
+usage: main.py --mode {run, plot} --name TEST_NAME
+               [--goal_y GOAL_Y] [--goal_x GOAL_X]
+               [--rounds AMOUNT_OF_ROUNDS] [--agents AMOUNT_OF_AGENTS]
+               [--spawn_x_min SPAWN_X_MIN] [--spawn_x_max SPAWN_X_MAX]
+               [--spawn_y_min SPAWN_Y_MIN] [--spawn_y_max SPAWN_Y_MAX]
+               [--shape FLOCK_SHAPE] [--max_velocity MAX_AGENT_VELOCITY]
+               [--safe_distance SAFE_DISTANCE_BETWEEN_AGENTS]
+               [--model GPT_MODEL] [--memory_limit MEMORY_LIMIT]
+               [--x_min X_MIN] [--x_max X_MAX] [--x_ticks X_TICKS]
+               [--y_min Y_MIN] [--y_max Y_MAX]
+```

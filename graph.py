@@ -9,64 +9,63 @@ matplotlib.use("TkAgg")
 
 
 class Graph:
-    # todo: prettier colors
-    colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'cyan', 'magenta', 'brown', 'black']
+    colors = np.array([
+        [0xe8, 0x3b, 0x3b],  # red
+        [0x7a, 0x30, 0x45],  # maroon
+        [0xf9, 0xc2, 0x2b],  # yellow
+        [0x16, 0x5a, 0x4c],  # forest green
+        [0x4d, 0x9b, 0xe6],  # blue
+        [0x30, 0xe1, 0xb9],  # cyan
+        [0xc3, 0x24, 0x54]   # dark pink
+    ]) / 255
 
     @staticmethod
     def plot_animated(data):
-        # forgive me
         fig, ax = plt.subplots(figsize=(8, 4))
 
         lines = []
         scatters = []
-        start_scatters = []
 
-        for i in range(data.config["agents"]):
-            current_color = Graph.colors[i % 8]
-            flight_path_line, = ax.plot([], [], lw=2, color=current_color, label=f'Drone {i + 1} Path',
-                                        linestyle='--', )
-            # reshape color here but whatevs
-            scatter = ax.scatter([], [], marker='o', c=current_color, s=50)
+        for i in range(data.settings.agents):
+            current_color = Graph.colors[i % len(Graph.colors)]
 
-            start_pos = data.agents[i]["position_history"][0]
-            # reshape this too
-            start_scatter = ax.scatter(start_pos[0], start_pos[1], alpha=0.5, color=current_color, s=100, marker='o',
-                                       label=f'Drone {i + 1} Initial Position')
-
+            flight_path_line, = ax.plot([], [], lw=2, color=current_color, linestyle='--')
             lines.append(flight_path_line)
-            scatters.append(scatter)
-            start_scatters.append(start_scatter)
 
-        # reshape this color too maybe
-        goal_scatter = ax.scatter([], [], c=Graph.colors[-1], marker='$*$', s=100, label="Target")
-        goal_scatter.set_offsets(data.config["goal"])
+            scatter = ax.scatter([], [], marker='o', c=current_color.reshape(1, -1), s=50, alpha=0.8, label=f'Drone {i + 1}')
+            scatters.append(scatter)
+
+        goal_scatter = ax.scatter([], [], c="#2e222f", marker='$*$', s=100, label="Goal")
+        goal_scatter.set_offsets([data.settings.goal_x, data.settings.goal_y])
 
         def init():
             ax.set_xlabel('x')
             ax.set_ylabel('y')
-            ax.set_ylim(0, 100)  # todo: add these to config
-            ax.set_xticks(range(-20, 130, 10))
+
+            ax.set_ylim(data.settings.y_min, data.settings.y_max)
+            ax.set_xticks(range(data.settings.x_min, data.settings.x_max, data.settings.x_ticks))
 
             for dashed_line, scatter in zip(lines, scatters):
                 dashed_line.set_data([], [])
                 scatter.set_offsets(np.empty((0, 2)))
+
             handles, labels = ax.get_legend_handles_labels()
             ax.legend(handles=handles, labels=labels, loc="upper left", labelspacing=0.6, fontsize=10)
-            return lines + scatters + start_scatters
+            return lines + scatters
 
-        def animate(frame):
+        def update(frame):
             for i, (dashed_line, scatter) in enumerate(zip(lines, scatters)):
                 all_positions = data.agents[i]["position_history"]
 
-                dashed_line.set_data([x for x, y in all_positions[:frame + 1]],
-                                     [y for x, y in all_positions[:frame + 1]])
-                start_x, start_y = all_positions[frame]  # todo: unhardcode this
-                scatter.set_offsets([start_x, start_y])
-            if frame == data.config["rounds"] - 1:
-                plt.savefig(f'{data.directory}/last.svg', bbox_inches='tight')
+                dashed_line.set_data([x for x, y in all_positions[max(0, frame - 3):frame + 1]],
+                                     [y for x, y in all_positions[max(0, frame - 3):frame + 1]])
+                latest_x, latest_y = all_positions[frame]
+                scatter.set_offsets([latest_x, latest_y])
 
+            if frame == data.settings.rounds - 1:
+                plt.savefig(f'{data.directory}/last.svg', bbox_inches='tight')
             return lines + scatters
 
-        ani = FuncAnimation(fig, animate, frames=data.config["rounds"], init_func=init, blit=False)
-        ani.save(f'{data.directory}/animation.gif', fps=20)
+        ani = FuncAnimation(fig, update, frames=data.settings.rounds, init_func=init, blit=False)
+        ani.save(f'{data.directory}/animation.gif', fps=15)
         plt.show()
