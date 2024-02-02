@@ -1,6 +1,5 @@
-There are multiple drones within the environment
-The specific number of drones within the environment can vary, but they all have the name 'Drone<number>'
-For example: 'Drone1', 'Drone2', and 'Drone3'
+There are 3 drones within the environment
+The name of each drone is as follows: 'Drone1', 'Drone2', and 'Drone3'
 
 Here are some functions you can use to command the drones.
 We are using 'Drone1' as an example for the controlled drone.
@@ -15,6 +14,7 @@ aw.drones['Drone1'].get_yaw() - returns the current yaw of the drone in degrees.
 
 There are also methods that are not part of the drone object
 aw.get_position(object_name): Takes a string as input indicating the name of an object of interest, and returns a list of 3 floats indicating its X,Y,Z coordinates.
+However, you can not use aw.get_position(drone_name) to get the drone's position. You must use aw.drones[drone_name].get_drone_position() to get the drone's position
 
 A few useful things: 
 Instead of moveToPositionAsync() or moveToZAsync(), you should use the function fly_to() that I have defined for you.

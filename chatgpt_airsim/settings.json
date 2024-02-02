@@ -5,17 +5,17 @@
     "Drone1": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
-      "X": 0, "Y": 5, "Z": 0
+      "X": 0, "Y": 0, "Z": 0
     },
     "Drone2": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
-      "X": 5, "Y": 5, "Z": 0
+      "X": 0, "Y": -2, "Z": 0
     },
     "Drone3": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
-      "X": -5, "Y": 5, "Z": 0
+      "X": 0, "Y": 2, "Z": 0
     }
   },
   "CameraDefaults": {
