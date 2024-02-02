@@ -104,9 +104,14 @@ class colors:  # You may need to change color settings
     BLUE = "\033[34m"
 
 
-# Initializes the AirSim Wrapper
+# obtain list of drones
+with open('settings.json', 'r') as file:
+    settings = json.load(file)
+drone_names = list(settings.get("Vehicles", {}).keys())
+
+# Initializes the AirSim Wrapper with the drones in environment
 print(f"Initializing AirSim...")
-aw = AirSimWrapper()
+aw = AirSimWrapper(drone_names)
 print(f"Done.")
 
 # reads the prompt specified by user, most likely prompts/airsim_basic.txt
