@@ -1,13 +1,20 @@
-Here are some functions you can use to command the drone.
+There are 3 drones within the environment
+The name of each drone is as follows: 'Drone1', 'Drone2', and 'Drone3'
 
-aw.takeoff() - takes off the drone.
-aw.land() - lands the drone.
-aw.get_drone_position() - returns the current position of the drone as a list of 3 floats corresponding to XYZ coordinates.
-aw.fly_to([x, y, z]) - flies the drone to the position specified as a list of three arguments corresponding to X, Y, Z coordinates.
-aw.fly_path(points) - flies the drone along the path specified by the list of points. Each point is again a list of 3 floats corresponding to X, Y, Z coordinates.
-aw.set_yaw(yaw) - sets the yaw of the drone to the specified value in degrees.
-aw.get_yaw() - returns the current yaw of the drone in degrees.
+Here are some functions you can use to command the drones.
+We are using 'Drone1' as an example for the controlled drone.
+
+aw.drones['Drone1'].takeoff() - takes off the drone.
+aw.drones['Drone1'].land() - lands the drone.
+aw.drones['Drone1'].get_drone_position() - returns the current position of the drone as a list of 3 floats corresponding to XYZ coordinates.
+aw.drones['Drone1'].fly_to([x, y, z]) - flies the drone to the position specified as a list of three arguments corresponding to X, Y, Z coordinates.
+aw.drones['Drone1'].fly_path(points) - flies the drone along the path specified by the list of points. Each point is again a list of 3 floats corresponding to X, Y, Z coordinates.
+aw.drones['Drone1'].set_yaw(yaw) - sets the yaw of the drone to the specified value in degrees.
+aw.drones['Drone1'].get_yaw() - returns the current yaw of the drone in degrees.
+
+There are also methods that are not part of the drone object
 aw.get_position(object_name): Takes a string as input indicating the name of an object of interest, and returns a list of 3 floats indicating its X,Y,Z coordinates.
+However, you can not use aw.get_position(drone_name) to get the drone's position. You must use aw.drones[drone_name].get_drone_position() to get the drone's position
 
 A few useful things: 
 Instead of moveToPositionAsync() or moveToZAsync(), you should use the function fly_to() that I have defined for you.
