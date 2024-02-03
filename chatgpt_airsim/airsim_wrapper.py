@@ -67,11 +67,11 @@ class Drone:
 
     # makes the drone take off
     def takeoff(self):
-        self.client.takeoffAsync(vehicle_name=self.drone_name).join()
+        self.client.takeoffAsync(vehicle_name=self.drone_name)
 
     # makes the drone land on the ground
     def land(self):
-        self.client.landAsync(vehicle_name=self.drone_name).join()
+        self.client.landAsync(vehicle_name=self.drone_name)
 
     # returns the drone's current position, relative to the world
     def get_drone_position(self):
@@ -87,9 +87,9 @@ class Drone:
     # makes the drone fly to a specific point in the environment, z axis is always negative
     def fly_to(self, point):
         if point[2] > 0:
-            self.client.moveToPositionAsync(point[0], point[1], -point[2], 5, vehicle_name=self.drone_name).join()
+            self.client.moveToPositionAsync(point[0], point[1], -point[2], 5, vehicle_name=self.drone_name)
         else:
-            self.client.moveToPositionAsync(point[0], point[1], point[2], 5, vehicle_name=self.drone_name).join()
+            self.client.moveToPositionAsync(point[0], point[1], point[2], 5, vehicle_name=self.drone_name)
 
     # flies to various points in a path
     def fly_path(self, points):
@@ -101,11 +101,11 @@ class Drone:
                 airsim_points.append(airsim.Vector3r(point[0], point[1], point[2]))
         self.client.moveOnPathAsync(airsim_points, 5, 120, airsim.DrivetrainType.ForwardOnly,
                                     airsim.YawMode(False, 0),
-                                    20, 1, vehicle_name=self.drone_name).join()
+                                    20, 1, vehicle_name=self.drone_name)
 
     # sets the drone's yaw rotation (turn left or right)
     def set_yaw(self, yaw):
-        self.client.rotateToYawAsync(yaw, 5, vehicle_name=self.drone_name).join()
+        self.client.rotateToYawAsync(yaw, 5, vehicle_name=self.drone_name)
 
     # gets the drone's current yaw
     def get_yaw(self):
