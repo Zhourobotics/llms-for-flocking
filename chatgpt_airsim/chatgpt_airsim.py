@@ -107,11 +107,24 @@ class colors:  # You may need to change color settings
 # obtain list of drones
 with open('settings.json', 'r') as file:
     settings = json.load(file)
-drone_names = list(settings.get("Vehicles", {}).keys())
+
+# Initialize an empty list for drone names
+drone_names = []
+car_names = []
+
+# Iterate through each vehicle in the "Vehicles" section
+for vehicle_name, attributes in settings.get("Vehicles", {}).items():
+    # Check if the vehicle type is "SimpleFlight" or "PhysXCar"
+    if attributes.get("VehicleType") == "SimpleFlight":
+        # Add drone name
+        drone_names.append(vehicle_name)
+    elif attributes.get("VehicleType") == "PhysXCar":
+        # Add car name
+        car_names.append(vehicle_name)
 
 # Initializes the AirSim Wrapper with the drones in environment
 print(f"Initializing AirSim...")
-aw = AirSimWrapper(drone_names)
+aw = AirSimWrapper(drone_names, car_names)
 print(f"Done.")
 
 # reads the prompt specified by user, most likely prompts/airsim_basic.txt
