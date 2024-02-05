@@ -37,6 +37,6 @@ class AirSimWrapper:
         query_string = objects_dict[object_name] + ".*"
         object_names_ue = []
         while len(object_names_ue) == 0:
-            object_names_ue = self.client.simListSceneObjects(query_string)
-        pose = self.client.simGetObjectPose(object_names_ue[0])
+            object_names_ue = self.drone_client.simListSceneObjects(query_string)
+        pose = self.drone_client.simGetObjectPose(object_names_ue[0])
         return [pose.position.x_val, pose.position.y_val, pose.position.z_val]
