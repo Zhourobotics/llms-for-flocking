@@ -16,6 +16,21 @@
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
       "X": 0, "Y": 2, "Z": 0
+    },
+    "Car1": {
+      "VehicleType": "PhysXCar",
+      "AutoCreate": true,
+      "X": 5, "Y": 0, "Z": 0
+    },
+    "Car2": {
+      "VehicleType": "PhysXCar",
+      "AutoCreate": true,
+      "X": 5, "Y": -5, "Z": 0
+    },
+    "Car3": {
+      "VehicleType": "PhysXCar",
+      "AutoCreate": true,
+      "X": 5, "Y": 5, "Z": 0
     }
   },
   "CameraDefaults": {
