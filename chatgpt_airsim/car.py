@@ -26,18 +26,8 @@ class Car:
 
         self.initial_offset = initial_offset
 
-        # Confirm connection and enable API control for this car
+        # Confirm connection
         self.client.confirmConnection()
-        self.client.enableApiControl(True, car_name)
-
-    # Commands the car to start moving with a given throttle and steering
-    def drive(self, throttle, steering):
-        car_controls = airsim.CarControls(throttle=throttle, steering=steering)
-        self.client.setCarControls(car_controls, vehicle_name=self.car_name)
-
-    # Stops the car
-    def stop(self):
-        self.drive(0, 0)  # Set throttle and steering to 0 to stop the car
 
     # Returns the car's current position, relative to the world
     def get_car_position(self):

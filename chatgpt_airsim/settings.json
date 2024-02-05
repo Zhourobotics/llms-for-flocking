@@ -1,6 +1,6 @@
 {
   "SettingsVersion": 1.2,
-  "SimMode": "Multirotor",
+  "SimMode": "Both",
   "Vehicles": {
     "Drone1": {
       "VehicleType": "SimpleFlight",
