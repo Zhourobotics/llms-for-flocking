@@ -9,5 +9,3 @@ venv/
 .idea/
 test.py/
 /results/*
-chatgpt_airsim/config.json
-chatgpt_airsim/__pycache__/
