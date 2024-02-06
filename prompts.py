@@ -21,23 +21,7 @@ class Flocking:
     )
     output_format = (
         "Strictly follow the 'Reasoning:..., Position: [x, y]' format to provide your answer. x and y must both be "
-        "floating point numbers. Briefly provide your thought process in the reasoning section while keeping the "
-        "position section ONLY for the position you wish to move to this iteration, without any further explanation."
+        "floating point numbers truncated to two decimal places. Briefly provide your thought process in the reasoning "
+        "section while keeping the position section ONLY for the position you wish to move to this iteration, without "
+        "any further explanation. Do not write ANYTHING ELSE in the position section."
     )
-
-    @staticmethod
-    def get_game_description(position, other_positions, max_velocity, flock_shape, safe_distance):
-        return Flocking.game_description.format(
-            position,
-            other_positions,
-            max_velocity,
-            flock_shape,
-            safe_distance
-        )
-
-    @staticmethod
-    def get_round_description(position, other_positions):
-        return Flocking.round_description.format(
-            position,
-            other_positions,
-        )

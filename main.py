@@ -7,12 +7,11 @@ from agents import FlockingAgent
 from graph import Graph
 from data import Data
 
-from arguments import gen_parser
+from arguments import parse_cli_arguments
 import prompts
 
 async def main():
-    parser = gen_parser()
-    args = parser.parse_args()
+    args = parse_cli_arguments()
 
     if args.mode == "run":
         if not os.path.isfile(f'./results/{args.name}/results'):
@@ -39,18 +38,9 @@ async def main():
                         map(lambda a: str(a.position), filter(lambda a: a.identifier != agent.identifier, agents))))
 
                     if r > 0:
-                        message = prompts.Flocking.get_round_description(
-                            agent.position,
-                            other_agent_positions,
-                        )
+                        message = args.round_description.format(agent.position, other_agent_positions)
                     else:
-                        message = prompts.Flocking.get_game_description(
-                            agent.position,
-                            other_agent_positions,
-                            args.max_velocity,
-                            args.shape,
-                            args.safe_distance
-                        )
+                        message = args.prompt.format(agent.position, other_agent_positions)
 
                     # ask agent where to move (coroutine)
                     coroutines.append(

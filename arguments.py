@@ -1,7 +1,7 @@
 import argparse
 
 
-def gen_parser():
+def parse_cli_arguments():
     parser = argparse.ArgumentParser(description="Flocking LLM Simulation")
     parser.add_argument("--mode", "-m", choices=["run", "plot"], required=True,
                         help="Whether to 'run' the simulation, or to 'plot' a completed simulation")
@@ -9,13 +9,14 @@ def gen_parser():
     parser.add_argument("--name", "-n", type=str, required=True,
                         help="Unique name for this particular simulation")
 
-    # For running
-    parser.add_argument("--goal_x", "-gx", type=float, default=50.0,
-                        help="Goal x position")
-    parser.add_argument("--goal_y", "-gy", type=float, default=50.0,
-                        help="Goal y position")
+    parser.add_argument("--prompt", "-p", type=str,
+                        help="LLM prompt. Formats first {} to agent position and second {} to peer positions.")
 
-    parser.add_argument("--seed", type=int, default=42,
+    parser.add_argument("--round_description", "-r", type=str,
+                        help="LLM round description. Formats first {} to agent position and second {} to peer positions.")
+
+    # For running
+    parser.add_argument("--seed", "-s", type=int, default=42,
                         help="Random seed")
 
     parser.add_argument("--spawn_x_min", "-sxmi", type=float, default=1.0,
@@ -28,13 +29,7 @@ def gen_parser():
     parser.add_argument("--spawn_y_max", "-syma", type=float, default=20.0,
                         help="Upper bound of the agent's random spawn range's y coordinate")
 
-    parser.add_argument("--shape", "-s", type=str, default="lattice",
-                        help="Shape flock will attempt to form")
-    parser.add_argument("--max_velocity", "-v", type=float, default=10.0,
-                        help="Maximum velocity agents can travel per round")
-    parser.add_argument("--safe_distance", "-d", type=float, default=3.0,
-                        help="Minimum distance agents will try to keep from each other")
-    parser.add_argument("--rounds", "-r", type=int, default=10,
+    parser.add_argument("--rounds", "-t", type=int, default=10,
                         help="Number of rounds for the simulation to run")
     parser.add_argument("--agents", "-a", type=int, default=5,
                         help="Number of agents in the simulation")
@@ -53,4 +48,10 @@ def gen_parser():
                         help="Lower bound of plot")
     parser.add_argument("--y_max", "-pyma", type=int, default=100,
                         help="Upper bound of plot")
-    return parser
+
+    args = parser.parse_args()
+
+    if (args.mode == "run") and (args.prompt is None or args.round_description is None):
+        parser.error("'Run' mode requires --prompt and --round_description arguments.")
+
+    return args
