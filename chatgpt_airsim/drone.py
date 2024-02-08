@@ -1,12 +1,16 @@
 import airsim
 import json
+from pynput import keyboard
 
 
 # Drone class for each drone in the environment
 class Drone:
-    def __init__(self, client, drone_name):
+    speed = 5
+
+    def __init__(self, client, drone_name, is_leader=False):
         self.client = client
         self.drone_name = drone_name
+        self.is_leader = is_leader
 
         # Obtain the initial offset from settings.json
         with open('settings.json', 'r') as file:
@@ -78,3 +82,35 @@ class Drone:
         orientation_quat = self.client.simGetVehiclePose(vehicle_name=self.drone_name).orientation
         yaw = airsim.to_eularian_angles(orientation_quat)[2]
         return yaw
+
+    def get_leader(self):
+        return self.is_leader
+
+    def set_leader(self, is_leader):
+        self.is_leader = is_leader
+
+    # Method to handle keyboard inputs
+    def on_press(self, key):
+        if not self.is_leader:
+            return
+
+        try:
+            if key.char == 'w':
+                # Ascend
+                self.client.moveToZAsync(-20, Drone.speed, vehicle_name=self.drone_name)
+            elif key.char == 's':
+                # Descend
+                self.client.moveToZAsync(-5, Drone.speed, vehicle_name=self.drone_name)
+        except AttributeError:
+            if key == keyboard.Key.up:
+                # Move forward
+                self.client.moveByVelocityAsync(5, 0, 0, 1, vehicle_name=self.drone_name)
+            elif key == keyboard.Key.down:
+                # Move backward
+                self.client.moveByVelocityAsync(-5, 0, 0, 1, vehicle_name=self.drone_name)
+            elif key == keyboard.Key.left:
+                # Move left
+                self.client.moveByVelocityAsync(0, -5, 0, 1, vehicle_name=self.drone_name)
+            elif key == keyboard.Key.right:
+                # Move right
+                self.client.moveByVelocityAsync(0, 5, 0, 1, vehicle_name=self.drone_name)

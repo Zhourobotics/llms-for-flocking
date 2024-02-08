@@ -1,5 +1,5 @@
-There are 3 drones within the environment
-The name of each drone is as follows: 'Drone1', 'Drone2', and 'Drone3'
+There are 6 drones within the environment
+The name of each drone is as follows: 'Drone1', 'Drone2', 'Drone3', 'Drone4', 'Drone5', and 'Drone6'
 
 Here are some functions you can use to command the drones.
 We are using 'Drone1' as an example for the controlled drone.
@@ -11,14 +11,8 @@ aw.drones['Drone1'].fly_to([x, y, z]) - flies the drone to the position specifie
 aw.drones['Drone1'].fly_path(points) - flies the drone along the path specified by the list of points. Each point is again a list of 3 floats corresponding to X, Y, Z coordinates.
 aw.drones['Drone1'].set_yaw(yaw) - sets the yaw of the drone to the specified value in degrees.
 aw.drones['Drone1'].get_yaw() - returns the current yaw of the drone in degrees.
-
-There are also 3 cars within the environment
-The name of each car is as follows: 'Car1', 'Car2', and 'Car3'
-
-Here are some functions you can use to command the cars.
-We are using 'Car1' as an example for the controlled car.
-aw.cars['Car1'].get_car_position() - returns the position of the car in the world
-aw.cars['Car1'].get_speed() - returns the speed of the car
+aw.drones['Drone1'].get_leader() - returns True if the drone is a leader, False if not
+aw.drones['Drone1'].set_leader(is_leader) - sets the is_leader attribute of the drone to the specified boolean value
 
 A few useful things: 
 Instead of moveToPositionAsync() or moveToZAsync(), you should use the function fly_to() that I have defined for you.
