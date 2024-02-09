@@ -4,7 +4,7 @@ import airsim
 import math
 import numpy as np
 from drone import Drone
-from pynput import keyboard
+import random
 
 # dictionary of environment objects and their associated real names in AirSim
 objects_dict = {
@@ -24,25 +24,19 @@ class AirSimWrapper:
     # takes list of drone names to create dictionary of drones
     def __init__(self, drone_names):
         self.drone_client = airsim.MultirotorClient()
-        self.drones = {name: Drone(self.drone_client, name) for name in drone_names}
+        self.drones = {}
+        for i, name in enumerate(drone_names):
+            if i == 0:
+                self.drones[name] = Drone(self.drone_client, name, True)
+            else:
+                self.drones[name] = Drone(self.drone_client, name)
         self.listener = None
 
-    def start_keyboard_listener(self):
-        # Method to start keyboard listener
-        self.listener = keyboard.Listener(on_press=self.on_press)
-        self.listener.start()
-
-    def stop_keyboard_listener(self):
-        # Method to stop the listener
-        if self.listener:
-            self.listener.stop()
-
-    def on_press(self, key):
-        # Delegate key presses to the leader drone
-        for drone_name, drone in self.drones.items():
+    def moveLeader(self):
+        for drone in self.drones.values():
             if drone.get_leader():
-                drone.on_press(key)
-                break  # Assuming only one leader, break after processing
+                drone.takeoff()
+                drone.move_randomly()
 
     def get_drone(self, drone_name):
         return self.drones.get(drone_name, None)

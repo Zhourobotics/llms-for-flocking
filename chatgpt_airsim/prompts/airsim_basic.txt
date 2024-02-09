@@ -14,6 +14,8 @@ aw.drones['Drone1'].get_yaw() - returns the current yaw of the drone in degrees.
 aw.drones['Drone1'].get_leader() - returns True if the drone is a leader, False if not
 aw.drones['Drone1'].set_leader(is_leader) - sets the is_leader attribute of the drone to the specified boolean value
 
+Upon initialization, Drone1 is the leader and thus, should not be controlled. The other drones are non leader drones that can be controlled.
+
 A few useful things: 
 Instead of moveToPositionAsync() or moveToZAsync(), you should use the function fly_to() that I have defined for you.
 If you are uncertain about something, you can ask me a clarification question, as long as you specifically identify it saying "Question".

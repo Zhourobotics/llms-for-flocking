@@ -1,6 +1,7 @@
 import airsim
 import json
-from pynput import keyboard
+import random
+import time
 
 
 # Drone class for each drone in the environment
@@ -37,7 +38,7 @@ class Drone:
 
     # makes the drone take off
     def takeoff(self):
-        self.client.takeoffAsync(vehicle_name=self.drone_name)
+        self.client.takeoffAsync(vehicle_name=self.drone_name).join()
 
     # makes the drone land on the ground
     def land(self):
@@ -89,28 +90,7 @@ class Drone:
     def set_leader(self, is_leader):
         self.is_leader = is_leader
 
-    # Method to handle keyboard inputs
-    def on_press(self, key):
-        if not self.is_leader:
-            return
-
-        try:
-            if key.char == 'w':
-                # Ascend
-                self.client.moveToZAsync(-20, Drone.speed, vehicle_name=self.drone_name)
-            elif key.char == 's':
-                # Descend
-                self.client.moveToZAsync(-5, Drone.speed, vehicle_name=self.drone_name)
-        except AttributeError:
-            if key == keyboard.Key.up:
-                # Move forward
-                self.client.moveByVelocityAsync(5, 0, 0, 1, vehicle_name=self.drone_name)
-            elif key == keyboard.Key.down:
-                # Move backward
-                self.client.moveByVelocityAsync(-5, 0, 0, 1, vehicle_name=self.drone_name)
-            elif key == keyboard.Key.left:
-                # Move left
-                self.client.moveByVelocityAsync(0, -5, 0, 1, vehicle_name=self.drone_name)
-            elif key == keyboard.Key.right:
-                # Move right
-                self.client.moveByVelocityAsync(0, 5, 0, 1, vehicle_name=self.drone_name)
+    def move_randomly(self):
+        while self.get_leader():
+            self.fly_to((random.randint(-10, 10), random.randint(-10, 10), random.randint(-10, 10)))
+            time.sleep(2)

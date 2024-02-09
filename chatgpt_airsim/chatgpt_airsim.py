@@ -7,7 +7,6 @@ import numpy as np
 import os
 import json
 import time
-from pynput import keyboard
 
 # handles arguments when running the script
 # defaults the initial prompts to those in the following txt files
@@ -122,7 +121,6 @@ for vehicle_name, attributes in settings.get("Vehicles", {}).items():
 # Initializes the AirSim Wrapper with the drones in environment
 print(f"Initializing AirSim...")
 aw = AirSimWrapper(drone_names)
-aw.start_keyboard_listener()
 print(f"Done.")
 
 # reads the prompt specified by user, most likely prompts/airsim_basic.txt
