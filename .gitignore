@@ -1,0 +1,15 @@
+.env
+__pycache__/
+*$py.class
+pip-log.txt
+pip-delete-this-directory.txt
+secrets.yml
+.DS_Store
+venv/
+.idea/
+test.py/
+/results/*
+secret.yml
+main_sync.py
+agent_dummy.py
+/elements/__pycache__
