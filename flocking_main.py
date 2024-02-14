@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 from elements.model import MultiAgent, FirstOrderMultiAgent
 from elements.assets import *
 
-Nt = 1000
+Nt = 200
 RANGE = 12
 DISTANCE = 10
 NUMBER_OF_AGENTS = 30
-multi_agent_system = MultiAgent(number=NUMBER_OF_AGENTS)
+multi_agent_system = MultiAgent(number=NUMBER_OF_AGENTS, steps=Nt)
 # print(multi_agent_system.agents)
 
 C1_alpha = 3
@@ -17,8 +17,8 @@ C1_gamma = 5
 C2_gamma = 0.2 * np.sqrt(C1_gamma)
 
 # plotting agents
-# for t in range(Nt):
-while True:
+for t in range(Nt):
+# while True: 
     adjacency_matrix = get_adjacency_matrix(multi_agent_system.agents, RANGE)
     u = np.zeros((NUMBER_OF_AGENTS,2))
     for i in range(NUMBER_OF_AGENTS):
@@ -61,5 +61,6 @@ while True:
         plt.scatter(x, y, c='black')
 
     plt.pause(0.01)
-
+    # print(t)
+# print(multi_agent_system.agents_hist) # full history of the pos and vel for each agent
 plt.show()
