@@ -9,6 +9,7 @@ RANGE = 12
 DISTANCE = 10
 NUMBER_OF_AGENTS = 30
 multi_agent_system = MultiAgent(number=NUMBER_OF_AGENTS, steps=Nt)
+IF_PLOT = 0
 # print(multi_agent_system.agents)
 
 C1_alpha = 3
@@ -46,21 +47,33 @@ for t in range(Nt):
 
 
     multi_agent_system.update_state(u)
-    plt.cla()
-    ax = plt.gca()
-    ax.set_aspect('equal', 'box')
-    plt.axis([0, 100, 0, 100])
     
+    if IF_PLOT:
+        plt.cla()
+        ax = plt.gca()
+        ax.set_aspect('equal', 'box')
+        plt.axis([0, 100, 0, 100])
+        
 
-    for i in range(NUMBER_OF_AGENTS):
-        for j in range(NUMBER_OF_AGENTS):
-            if i!= j and adjacency_matrix[i,j] == 1:
-                plt.plot(multi_agent_system.agents[[i,j],0], multi_agent_system.agents[[i,j],1])
+        for i in range(NUMBER_OF_AGENTS):
+            for j in range(NUMBER_OF_AGENTS):
+                if i!= j and adjacency_matrix[i,j] == 1:
+                    plt.plot(multi_agent_system.agents[[i,j],0], multi_agent_system.agents[[i,j],1])
 
-    for i, (x, y,_,_) in enumerate(multi_agent_system.agents):
-        plt.scatter(x, y, c='black')
+        for i, (x, y,_,_) in enumerate(multi_agent_system.agents):
+            plt.scatter(x, y, c='black')
 
-    plt.pause(0.01)
+        plt.pause(0.01)
     # print(t)
 # print(multi_agent_system.agents_hist) # full history of the pos and vel for each agent
-plt.show()
+
+#TODO: Add prompt generation based on the pos and vel hist, and save to a file
+    """
+    format:
+    {"messages": [{"role": "system", "content": "Marv is a factual chatbot that is also sarcastic."}, {"role": "user", "content": "What's the capital of France?"}, {"role": "assistant", "content": "Paris, as if everyone doesn't know that already."}]}
+    {"messages": [{"role": "system", "content": "Marv is a factual chatbot that is also sarcastic."}, {"role": "user", "content": "Who wrote 'Romeo and Juliet'?"}, {"role": "assistant", "content": "Oh, just some guy named William Shakespeare. Ever heard of him?"}]}
+    {"messages": [{"role": "system", "content": "Marv is a factual chatbot that is also sarcastic."}, {"role": "user", "content": "How far is the Moon from Earth?"}, {"role": "assistant", "content": "Around 384,400 kilometers. Give or take a few, like that really matters."}]}
+    """
+
+if IF_PLOT:
+    plt.show()
