@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 from elements.model import MultiAgent
 from elements.assets import *
 
-ROUNDS = 75
+ROUNDS = 50
 RANGE = 12
 DISTANCE = 10
-NUMBER_OF_AGENTS = 8
+NUMBER_OF_AGENTS = 3
 multi_agent_system = MultiAgent(number=NUMBER_OF_AGENTS, steps=ROUNDS)
 IF_PLOT = True
 
@@ -16,8 +16,14 @@ C1_gamma = 5
 C2_gamma = 0.2 * np.sqrt(C1_gamma)
 
 
-game_description = "Your position is: [{}]. There are other drones in this space and their positions (in the format [[x, y], [x, y]...]) are: [{}]. Your collective task are to implement a flocking behavior. Keep in mind Boids flocking rules. Consider the velocity of the agents by calculating their distance traveled over the last few rounds. Attempt to match the velocity of nearby agents and adjust your movement to align with this average direction. Consider what are the distances between you and the other drones? If they are too close, you must move away to maintain personal space, otherwise you will fail the task. Finally, if you are not near any other agents, move towards the center of mass of nearby agents to stay close to the group."
-round_description = "Your position is: [{}]. The positions of the other drones (in the format [[x, y], [x, y]...]) are: [{}]. Pick a position to move to to implement Boids flocking behavior, and briefly explain the reasoning behind your decision."
+game_description = "Your position is: {}. There are other drones in this space and their positions (in the format [[x, y], [x, y]...]) are: {}. Your collective task are to implement a flocking behavior. Keep in mind Boids flocking rules. Consider the velocity of the agents by calculating their distance traveled over the last few rounds. Attempt to match the velocity of nearby agents and adjust your movement to align with this average direction. Consider what are the distances between you and the other drones? If they are too close, you must move away to maintain personal space, otherwise you will fail the task. Finally, if you are not near any other agents, move towards the center of mass of nearby agents to stay close to the group."
+
+round_description = "Your position is: {}. The positions of the other drones (in the format [[x, y], [x, y]...]) are: {}. Pick a position to move to to implement Boids flocking behavior, and briefly explain the reasoning behind your decision."
+
+output_format = (
+    "Strictly follow the &quot;Position: [x, y]&quot; format to provide your answer. x and y must both be "
+    "floating point numbers truncated to two decimal places. Do not write ANYTHING ELSE in the position section."
+)
 
 # plotting agents
 for t in range(ROUNDS):
@@ -70,6 +76,8 @@ for t in range(ROUNDS):
 
 data = [[{"role": "system", "content": "You are a drone navigating a two-dimensional space."}]] * NUMBER_OF_AGENTS
 
+step = 4
+
 for r in range(ROUNDS):
     for a in range(NUMBER_OF_AGENTS):
         other_agent_positions = []
@@ -80,20 +88,17 @@ for r in range(ROUNDS):
             else:
                 other_agent_positions.append([round(multi_agent_system.agents_hist[r][i][0], 2), round(multi_agent_system.agents_hist[r][i][1], 2)])
         
+        if (r) % step == 0:
+            if (r != 0):
+                data[a].append({"role": "assistant", "content": "Position: {}".format(agent_position)})
         
-        data[a].append(
-            {"role": "assistant", "content": "Position: {}".format(agent_position)}
-        )
-
-        data[a].append(
-            {"role": "user", "content": (game_description if r == 0 else round_description).format(agent_position,other_agent_positions)}
-        )
+        if r == 0 or ((r) % step == 0):
+            data[a].append({"role": "user", "content": ((game_description if r == 0 else round_description).format(agent_position,other_agent_positions) + " " + output_format)})
 
 with open("data.jsonl", "a") as training_data:
-    for l in range(len(data)):
-        if l != 1:
-            message = str('{"messages": ' + str(data[l]) + '}').replace("'", '"') # lol python
-            training_data.write(message + "\n")
+    for a in range(len(data)):                
+        message = str('{"messages": ' + str(data[a][:-1]) + '}').replace("'", '"').replace('\\"', '"').replace("&quot;", "'")  # lol python (hack)
+        training_data.write(message + "\n")
 
 if IF_PLOT:
     plt.show()
