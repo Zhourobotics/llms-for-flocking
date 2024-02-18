@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 from elements.model import MultiAgent
 from elements.assets import *
 
-ROUNDS = 50
+ROUNDS = 60
 RANGE = 12
 DISTANCE = 10
-NUMBER_OF_AGENTS = 3
+NUMBER_OF_AGENTS = 4
 multi_agent_system = MultiAgent(number=NUMBER_OF_AGENTS, steps=ROUNDS)
 IF_PLOT = True
 
@@ -82,6 +82,7 @@ for r in range(ROUNDS):
     for a in range(NUMBER_OF_AGENTS):
         other_agent_positions = []
         agent_position = []
+        
         for i in range(NUMBER_OF_AGENTS): # other agents
             if i == a:
                 agent_position = [round(multi_agent_system.agents_hist[r][i][0], 2), round(multi_agent_system.agents_hist[r][i][1], 2)]
@@ -90,14 +91,17 @@ for r in range(ROUNDS):
         
         if (r) % step == 0:
             if (r != 0):
-                data[a].append({"role": "assistant", "content": "Position: {}".format(agent_position)})
+                data[a].extend([{"role": "assistant", "content": "Position: {}".format(agent_position)}])
+                print(str(r) + " " + str(a) + " " + "assist")
         
         if r == 0 or ((r) % step == 0):
-            data[a].append({"role": "user", "content": ((game_description if r == 0 else round_description).format(agent_position,other_agent_positions) + " " + output_format)})
+            data[a].extend([{"role": "user", "content": ((game_description if r == 0 else round_description).format(agent_position,other_agent_positions) + " " + output_format)}])
+            print(str(r) + " " + str(a) + " " + "user")
+
 
 with open("data.jsonl", "a") as training_data:
     for a in range(len(data)):                
-        message = str('{"messages": ' + str(data[a][:-1]) + '}').replace("'", '"').replace('\\"', '"').replace("&quot;", "'")  # lol python (hack)
+        message = str('{"messages": ' + str(data[a][:-1]) + '}').replace("'", '"').replace('\\"', '"').replace("&quot;", "'")  # lol python
         training_data.write(message + "\n")
 
 if IF_PLOT:
