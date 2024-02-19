@@ -59,3 +59,6 @@ def get_a_ij(q_i, q_js):
 def get_n_ij(q_i, q_js):
     n_ij = sigma_grad(q_js-q_i)
     return n_ij
+
+def dist_check(q_i, q_j):
+    ...

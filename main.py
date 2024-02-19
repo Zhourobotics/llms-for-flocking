@@ -3,12 +3,13 @@ import matplotlib.pyplot as plt
 from elements.model import MultiAgent
 from elements.assets import *
 
-ROUNDS = 75
+ROUNDS = 70
 RANGE = 12
 DISTANCE = 10
-NUMBER_OF_AGENTS = 8
-multi_agent_system = MultiAgent(number=NUMBER_OF_AGENTS, steps=ROUNDS)
-IF_PLOT = True
+NUMBER_OF_AGENTS = 3
+multi_agent_system = MultiAgent(number=NUMBER_OF_AGENTS, steps=ROUNDS, sample_time=0.1)
+IF_PLOT = False
+IF_LOG = True
 
 C1_alpha = 3
 C2_alpha = 2 * np.sqrt(C1_alpha)
@@ -16,8 +17,14 @@ C1_gamma = 5
 C2_gamma = 0.2 * np.sqrt(C1_gamma)
 
 
-game_description = "Your position is: [{}]. There are other drones in this space and their positions (in the format [[x, y], [x, y]...]) are: [{}]. Your collective task are to implement a flocking behavior. Keep in mind Boids flocking rules. Consider the velocity of the agents by calculating their distance traveled over the last few rounds. Attempt to match the velocity of nearby agents and adjust your movement to align with this average direction. Consider what are the distances between you and the other drones? If they are too close, you must move away to maintain personal space, otherwise you will fail the task. Finally, if you are not near any other agents, move towards the center of mass of nearby agents to stay close to the group."
-round_description = "Your position is: [{}]. The positions of the other drones (in the format [[x, y], [x, y]...]) are: [{}]. Pick a position to move to to implement Boids flocking behavior, and briefly explain the reasoning behind your decision."
+# game_description = "Your position is: [{}]. There are other drones in this space and their positions (in the format [[x, y], [x, y]...]) are: [{}]. Your collective task are to implement a flocking behavior. Keep in mind Boids flocking rules. Consider the velocity of the agents by calculating their distance traveled over the last few rounds. Attempt to match the velocity of nearby agents and adjust your movement to align with this average direction. Consider what are the distances between you and the other drones? If they are too close, you must move away to maintain personal space, otherwise you will fail the task. Finally, if you are not near any other agents, move towards the center of mass of nearby agents to stay close to the group."
+# round_description = "Your position is: [{}]. The positions of the other drones (in the format [[x, y], [x, y]...]) are: [{}]. Pick a position to move to to implement Boids flocking behavior, and briefly explain the reasoning behind your decision."
+
+# game_description = "Your position is: [{}]. There are other drones in this space and their positions (in the format [[x, y], [x, y]...]) are: [{}]. "
+round_description = "Your position is: {}. Your neighbors positions are: {}."
+
+
+system_def = "You are a drone in a two-dimensional space. You will form a flock by keeping a desired distance between your nearest few neighbors. Your position will be provided as [x, y]. There are other drones in this space with positions in the format [[x1, y1], [x2, y2], ...]. We will only provide the information for the neighbors within the communication range, which is 12 units away. You should keep an ideal distance of 10 units away from your neighbor."
 
 # plotting agents
 for t in range(ROUNDS):
@@ -42,7 +49,7 @@ for t in range(ROUNDS):
             u_alpha = term1 + term2
         else:
             u_alpha=0
-        u_gamma = -C1_gamma*sigma_1(agent_p-[50,50]) -C2_gamma*(agent_q-0)
+        u_gamma = -C1_gamma*sigma_1(agent_p-[50,50]) -C2_gamma*(agent_q-0) # 【50,50] is the goal, and 0 is the final vel
         u[i] = u_alpha+u_gamma
 
 
@@ -67,33 +74,44 @@ for t in range(ROUNDS):
         plt.pause(0.01)
 
 
-
-data = [[{"role": "system", "content": "You are a drone navigating a two-dimensional space."}]] * NUMBER_OF_AGENTS
-
-for r in range(ROUNDS):
+if IF_LOG:
+    data = [[{"role": "system", "content": system_def}] for _ in range(ROUNDS * NUMBER_OF_AGENTS)]
+    # print(data)
     for a in range(NUMBER_OF_AGENTS):
-        other_agent_positions = []
-        agent_position = []
-        for i in range(NUMBER_OF_AGENTS): # other agents
-            if i == a:
-                agent_position = [round(multi_agent_system.agents_hist[r][i][0], 2), round(multi_agent_system.agents_hist[r][i][1], 2)]
-            else:
-                other_agent_positions.append([round(multi_agent_system.agents_hist[r][i][0], 2), round(multi_agent_system.agents_hist[r][i][1], 2)])
-        
-        
-        data[a].append(
-            {"role": "assistant", "content": "Position: {}".format(agent_position)}
-        )
+        for r in range(ROUNDS):
+            other_agent_positions = []
+            agent_position = []
+            for i in range(NUMBER_OF_AGENTS): # other agents
+                if i == a:
+                    agent_position = [round(multi_agent_system.agents_hist[r][i][0], 2), round(multi_agent_system.agents_hist[r][i][1], 2)]
+                    agent_next = [round(multi_agent_system.agents_hist[r+1][i][0], 2), round(multi_agent_system.agents_hist[r+1][i][1], 2)]
+                else:
+                    other_agent_positions.append([round(multi_agent_system.agents_hist[r][i][0], 2), round(multi_agent_system.agents_hist[r][i][1], 2)])
+            # print(f'{agent_position}, {other_agent_positions}')
+            message = [{"role": "user", "content": round_description.format(agent_position,other_agent_positions)},
+                {"role": "assistant", "content": "Position: {}".format(agent_next)}]
+            index = r + a*ROUNDS
+            # data[index].extend(
+            #     message
+            # )
+            # print(data[index])
+            data[index].extend(message)
+            # print(data[index+1])
+            # data[r*NUMBER_OF_AGENTS + a].append(
+            #     {"role": "assistant", "content": "Position: {}".format(agent_next)}
+            # )
+            # print(message)
+            # print(index)
+            # print(data[index])
 
-        data[a].append(
-            {"role": "user", "content": (game_description if r == 0 else round_description).format(agent_position,other_agent_positions)}
-        )
+            
 
-with open("data.jsonl", "a") as training_data:
-    for l in range(len(data)):
-        if l != 1:
-            message = str('{"messages": ' + str(data[l]) + '}').replace("'", '"') # lol python
-            training_data.write(message + "\n")
+    # print(data[0])
+    with open("data.jsonl", "a") as training_data:
+        for l in range(len(data)):
+            if l != 1:
+                message = str('{"messages": ' + str(data[l]) + '}').replace("'", '"') # lol python
+                training_data.write(message + "\n")
 
 if IF_PLOT:
     plt.show()
