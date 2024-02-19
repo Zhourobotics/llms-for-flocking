@@ -9,3 +9,9 @@ venv/
 .idea/
 test.py/
 /results/*
+LLMTool.py
+agent_dummy.py
+main_sync.py
+*.jsonl
+*.yml
+test.py
