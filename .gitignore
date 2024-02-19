@@ -13,3 +13,4 @@ secret.yml
 main_sync.py
 agent_dummy.py
 /elements/__pycache__
+*.jsonl
