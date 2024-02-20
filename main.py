@@ -37,14 +37,16 @@ async def main():
                     other_agent_positions = "{}".format(", ".join(
                         map(lambda a: str(a.position), filter(lambda a: a.identifier != agent.identifier, agents))))
 
-                    if r > 0:
-                        message = args.round_description.format(agent.position, other_agent_positions)
-                    else:
-                        message = args.prompt.format(agent.position, other_agent_positions)
-
+                    # if r > 0:
+                    #     message = args.round_description.format(agent.position, other_agent_positions)
+                    # else:
+                    #     message = args.prompt.format(agent.position, other_agent_positions)
+                    message = prompts.Flocking.round_description.format(agent.position, other_agent_positions)
+                    
                     # ask agent where to move (coroutine)
                     coroutines.append(
-                        agent.prompt(message + " " + prompts.Flocking.output_format, args.model, args.memory_limit))
+                        # agent.prompt(message + " " + prompts.Flocking.output_format, args.model, args.memory_limit))
+                        agent.prompt(message, args.model, args.memory_limit))
 
                     print("------------------------------------")
                     print("AGENT", agent.identifier + 1)

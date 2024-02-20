@@ -27,13 +27,14 @@ class FlockingAgent:
         summarized_history = self.memory
         if len(summarized_history) > 2 + memory_limit:
             summarized_history = self.memory[:2] + self.memory[-memory_limit:]
-        print(summarized_history)
+        # print(summarized_history)
         completion = self.client.chat.completions.create(model=model, messages=summarized_history)
 
         self.memory.append({"role": "assistant", "content": completion.choices[0].message.content})
         self.latest = completion.choices[0].message.content
 
     def update(self):
+        print(self.latest)
         exact_position = json.loads(self.latest.split("\nPosition: ")[1])
         self.position = [  # round position to two decimal places
             round(exact_position[0], 2),

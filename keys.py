@@ -1,6 +1,6 @@
 import yaml
 
-with open('./secrets.yml', 'r') as secret_file:
+with open('./secret.yml', 'r') as secret_file:
     secret = yaml.safe_load(secret_file)
 
 api_keys = secret.get('api_keys', {})
