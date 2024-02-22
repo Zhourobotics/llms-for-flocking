@@ -1,34 +1,13 @@
 import airsim
-import json
-import random
-import time
+from vector_math import *
 
 
 # Drone class for each drone in the environment
 class Drone:
-    speed = 5
 
-    def __init__(self, client, drone_name, is_leader=False):
+    def __init__(self, client, drone_name, initial_offset):
         self.client = client
         self.drone_name = drone_name
-        self.is_leader = is_leader
-
-        # Obtain the initial offset from settings.json
-        with open('settings.json', 'r') as file:
-            settings = json.load(file)
-
-        # Ensure the drone name exists in the settings to avoid KeyError
-        if drone_name in settings["Vehicles"]:
-            drone_settings = settings["Vehicles"][drone_name]
-            # Extract the initial X, Y, Z positions
-            initial_offset = [
-                drone_settings.get("X", 0),  # Default to 0 if not found
-                drone_settings.get("Y", 0),  # Default to 0 if not found
-                drone_settings.get("Z", 0)  # Default to 0 if not found
-            ]
-        else:
-            initial_offset = [0, 0, 0]  # Default offset if drone_name is not found
-
         self.initial_offset = initial_offset
 
         # Confirm connection and enable API control for this drone
@@ -38,7 +17,7 @@ class Drone:
 
     # makes the drone take off
     def takeoff(self):
-        self.client.takeoffAsync(vehicle_name=self.drone_name).join()
+        return self.client.takeoffAsync(vehicle_name=self.drone_name)
 
     # makes the drone land on the ground
     def land(self):
@@ -54,6 +33,24 @@ class Drone:
             pose.position.z_val + self.initial_offset[2]
         ]
         return adjusted_position
+
+    def get_drone_velocity(self):
+        # Get the state of the drone
+        drone_state = self.client.getMultirotorState(vehicle_name=self.drone_name)
+
+        # Extract the velocity
+        vx = drone_state.kinematics_estimated.linear_velocity.x_val
+        vy = drone_state.kinematics_estimated.linear_velocity.y_val
+        vz = drone_state.kinematics_estimated.linear_velocity.z_val
+
+        return [vx, vy, vz]
+
+    def fly(self, velocity):
+        # Extract the X, Y, and Z components of the velocity vector
+        vx, vy, vz = velocity
+
+        # Command the drone to move with the specified velocity
+        self.client.moveByVelocityAsync(vx, vy, vz, duration=0.5, vehicle_name=self.drone_name)
 
     # makes the drone fly to a specific point in the environment, z axis is always negative
     def fly_to(self, point):
@@ -84,13 +81,23 @@ class Drone:
         yaw = airsim.to_eularian_angles(orientation_quat)[2]
         return yaw
 
-    def get_leader(self):
-        return self.is_leader
+    def separation(self, drones, close_limit, repel_factor):
+        repelVecList = []
+        for drone in drones:
+            if drone != self:
+                dist_vec = calcDistVec(self.get_drone_position(), drone.get_drone_position())
+                distance = mag(dist_vec)
+                if distance < close_limit:
+                    repelVec = calcRepelVec(dist_vec, repel_factor)
+                    repelVecList.append(repelVec)
+        averageRepelVec = averageVec(repelVecList)
+        return averageRepelVec
 
-    def set_leader(self, is_leader):
-        self.is_leader = is_leader
-
-    def move_randomly(self):
-        while self.get_leader():
-            self.fly_to((random.randint(-10, 10), random.randint(-10, 10), random.randint(-10, 10)))
-            time.sleep(2)
+    def alignment(self, drones, radius, interpStrength):
+        limitDronesVel = []
+        for drone in drones:
+            if drone != self and calcDist(self.get_drone_position(), drone.get_drone_position()) < radius:
+                limitDronesVel.append(drone.get_drone_velocity())
+        averageVel = averageVec(limitDronesVel)
+        interpVel = interpVec(self.get_drone_velocity(), averageVel, interpStrength)
+        return interpVel

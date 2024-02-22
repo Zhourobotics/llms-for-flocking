@@ -2,35 +2,35 @@
   "SettingsVersion": 1.2,
   "SimMode": "Multirotor",
   "Vehicles": {
-    "Drone1": {
+    "Drone0": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
       "X": 0, "Y": 0, "Z": 0
     },
+    "Drone1": {
+      "VehicleType": "SimpleFlight",
+      "AutoCreate": true,
+      "X": -1, "Y": -5, "Z": 0
+    },
     "Drone2": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
-      "X": 0, "Y": -2, "Z": 0
+      "X": 5, "Y": -2, "Z": 0
     },
     "Drone3": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
-      "X": 0, "Y": 2, "Z": 0
+      "X": -3, "Y": 4, "Z": 0
     },
     "Drone4": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
-      "X": 2, "Y": 0, "Z": 0
+      "X": 2, "Y": -5, "Z": 0
     },
     "Drone5": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
-      "X": 2, "Y": -2, "Z": 0
-    },
-    "Drone6": {
-      "VehicleType": "SimpleFlight",
-      "AutoCreate": true,
-      "X": 2, "Y": 2, "Z": 0
+      "X": -4, "Y": 1, "Z": 0
     }
   },
   "CameraDefaults": {
