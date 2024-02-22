@@ -70,3 +70,8 @@ def interpVec(initialVec, endVec, interpStrength):
     interpVect = [(1 - interpStrength) * iv + interpStrength * ev for iv, ev in zip(initialVec, endVec)]
 
     return interpVect
+
+
+def normalize(vector):
+    distance = mag(vector)
+    return [component / distance for component in vector]

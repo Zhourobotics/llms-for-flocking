@@ -29,11 +29,16 @@ class AirSimWrapper:
         for name, offset in drones.items():
             self.drones.append(Drone(self.drone_client, name, offset))
 
-        self.close_limit = 5
-        self.repel_factor = 5
+        self.close_limit = 10
+        self.repel_factor = 10
 
-        self.radius = 25
-        self.interp_strength = 0.5
+        self.radius = 50  # Greater than close_limit
+        self.interp_strength = 0.5  # between 0-1
+
+        self.goalSpeed = 5
+
+        self.avoidLimit = 10
+        self.avoidFactor = 10
 
     def get_drone(self, index):
         return self.drones[index]
@@ -58,7 +63,7 @@ class AirSimWrapper:
     def separation(self):
         repelVectors = []
         for drone in self.drones:
-            repelVec = drone.separation(self.drones, self.close_limit, self.repel_factor)
+            repelVec = drone.separation(self.drones, self.close_limit, self.repel_factor, self.interp_strength)
             repelVectors.append(repelVec)
         return repelVectors
 
@@ -68,3 +73,24 @@ class AirSimWrapper:
             alignVec = drone.alignment(self.drones, self.radius, self.interp_strength)
             alignVectors.append(alignVec)
         return alignVectors
+
+    def cohesion(self):
+        cohesionVectors = []
+        for drone in self.drones:
+            cohesVec = drone.cohesion(self.drones, self.radius, self.interp_strength)
+            cohesionVectors.append(cohesVec)
+        return cohesionVectors
+
+    def goal(self, goalPos):
+        goalVectors = []
+        for drone in self.drones:
+            goalVec = drone.goal(goalPos, self.goalSpeed, self.interp_strength)
+            goalVectors.append(goalVec)
+        return goalVectors
+
+    def avoid(self):
+        avoidVectors = []
+        for drone in self.drones:
+            avoidVec = drone.avoid(self.avoidLimit, self.avoidFactor, self.interp_strength)
+            avoidVectors.append(avoidVec)
+        return avoidVectors

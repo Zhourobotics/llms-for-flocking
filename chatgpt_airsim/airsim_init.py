@@ -35,21 +35,28 @@ aw.initialize()
 
 time.sleep(3)
 
-sepW = 0.5
-aliW = 0.5
+sepW = 2
+aliW = 1
+cohW = 1.5
+goalW = 2
+goalPos = aw.get_position('crowd')
+avoidW = 2.5
 
 while True:
     sepVectors = aw.separation()
     alignVectors = aw.alignment()
-    print(sepVectors)
-    print(alignVectors)
+    cohVectors = aw.cohesion()
+    goalVectors = aw.goal(goalPos)
+    avoidVectors = aw.avoid()
+    print(f'Separation Vectors: {sepVectors}')
+    print(f'Alignment Vectors: {alignVectors}')
+    print(f'Cohesion Vectors: {cohVectors}')
+    print(f'Goal Vectors: {goalVectors}')
+    print(f'Avoid Vectors: {avoidVectors}')
 
-    # Ensure that repelVectors list and drones list are of the same length
-    if len(sepVectors) == len(aw.drones) and len(alignVectors) == len(aw.drones):
-        for drone, sepVec, alignVec in zip(aw.drones, sepVectors, alignVectors):
-            velVec = sumVec([weightVec(sepVec, sepW), weightVec(alignVec, aliW)])
-            drone.fly(velVec)
-    else:
-        print("Error: The number of repel vectors and drones does not match.")
+    for drone, sepVec, alignVec, cohVec, goalVec, avoidVec in zip(aw.drones, sepVectors, alignVectors, cohVectors, goalVectors, avoidVectors):
+        velVec = sumVec(
+            [weightVec(sepVec, sepW), weightVec(alignVec, aliW), weightVec(cohVec, cohW), weightVec(goalVec, goalW), weightVec(avoidVec, avoidW)])
+        drone.fly(velVec)
 
     time.sleep(0.5)

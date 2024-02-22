@@ -81,16 +81,19 @@ class Drone:
         yaw = airsim.to_eularian_angles(orientation_quat)[2]
         return yaw
 
-    def separation(self, drones, close_limit, repel_factor):
+    def separation(self, drones, close_limit, repel_factor, interpStrength):
         repelVecList = []
+        dronePos = self.get_drone_position()
         for drone in drones:
             if drone != self:
-                dist_vec = calcDistVec(self.get_drone_position(), drone.get_drone_position())
+                dist_vec = calcDistVec(dronePos, drone.get_drone_position())
                 distance = mag(dist_vec)
                 if distance < close_limit:
                     repelVec = calcRepelVec(dist_vec, repel_factor)
                     repelVecList.append(repelVec)
         averageRepelVec = averageVec(repelVecList)
+        if len(repelVecList) == 0:
+            return [0, 0, 0]
         return averageRepelVec
 
     def alignment(self, drones, radius, interpStrength):
@@ -98,6 +101,45 @@ class Drone:
         for drone in drones:
             if drone != self and calcDist(self.get_drone_position(), drone.get_drone_position()) < radius:
                 limitDronesVel.append(drone.get_drone_velocity())
+        if len(limitDronesVel) == 0:
+            return self.get_drone_velocity()
         averageVel = averageVec(limitDronesVel)
         interpVel = interpVec(self.get_drone_velocity(), averageVel, interpStrength)
         return interpVel
+
+    def cohesion(self, drones, radius, interpStrength):
+        limitDronesPos = []
+        for drone in drones:
+            if drone != self and calcDist(self.get_drone_position(), drone.get_drone_position()) < radius:
+                limitDronesPos.append(drone.get_drone_position())
+        if len(limitDronesPos) == 0:
+            return self.get_drone_velocity()
+        centroid = averageVec(limitDronesPos)
+        vel = calcDistVec(self.get_drone_position(), centroid)
+        return vel
+
+    def goal(self, goal_position, speed, interpStrength):
+        current_position = self.get_drone_position()
+        direction_vector = calcDistVec(current_position, goal_position)
+        distance = mag(direction_vector)
+
+        if distance == 0:
+            return [0, 0, 0]  # Already at the goal
+
+        # Normalize the direction vector
+
+        normalized_direction = normalize(direction_vector)
+
+        # Scale the normalized direction by the desired speed
+        velocity_vector = weightVec(normalized_direction, speed)
+
+        return velocity_vector
+
+    def avoid(self, avoidLimit, avoidFactor, interpStrength):
+        dronePos = self.get_drone_position()
+        if abs(dronePos[2]) < avoidLimit:
+            dist_vec = [0, 0, abs(dronePos[2])]
+            avoidVec = calcRepelVec(dist_vec, avoidFactor)
+            return avoidVec
+        else:
+            return [0, 0, 0]
