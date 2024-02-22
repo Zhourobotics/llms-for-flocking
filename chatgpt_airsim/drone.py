@@ -50,7 +50,7 @@ class Drone:
         vx, vy, vz = velocity
 
         # Command the drone to move with the specified velocity
-        self.client.moveByVelocityAsync(vx, vy, vz, duration=0.5, vehicle_name=self.drone_name)
+        self.client.moveByVelocityAsync(vx, vy, vz, duration=0.4, vehicle_name=self.drone_name)
 
     # makes the drone fly to a specific point in the environment, z axis is always negative
     def fly_to(self, point):

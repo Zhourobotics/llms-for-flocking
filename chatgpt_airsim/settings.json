@@ -5,32 +5,72 @@
     "Drone0": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
-      "X": 0, "Y": 0, "Z": 0
+      "X": 0,
+      "Y": 0,
+      "Z": 0
     },
     "Drone1": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
-      "X": -1, "Y": -5, "Z": 0
+      "X": -1,
+      "Y": -5,
+      "Z": 0
     },
     "Drone2": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
-      "X": 5, "Y": -2, "Z": 0
+      "X": 12,
+      "Y": -12,
+      "Z": 0
     },
     "Drone3": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
-      "X": -3, "Y": 4, "Z": 0
+      "X": -6,
+      "Y": 10,
+      "Z": 0
     },
     "Drone4": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
-      "X": 2, "Y": -5, "Z": 0
+      "X": 19,
+      "Y": -5,
+      "Z": 0
     },
     "Drone5": {
       "VehicleType": "SimpleFlight",
       "AutoCreate": true,
-      "X": -4, "Y": 1, "Z": 0
+      "X": -25,
+      "Y": 4,
+      "Z": 0
+    },
+    "Drone6": {
+      "VehicleType": "SimpleFlight",
+      "AutoCreate": true,
+      "X": 10,
+      "Y": -15,
+      "Z": 0
+    },
+    "Drone7": {
+      "VehicleType": "SimpleFlight",
+      "AutoCreate": true,
+      "X": -20,
+      "Y": 5,
+      "Z": 0
+    },
+    "Drone8": {
+      "VehicleType": "SimpleFlight",
+      "AutoCreate": true,
+      "X": 15,
+      "Y": 20,
+      "Z": 0
+    },
+    "Drone9": {
+      "VehicleType": "SimpleFlight",
+      "AutoCreate": true,
+      "X": -10,
+      "Y": -20,
+      "Z": 0
     }
   },
   "CameraDefaults": {

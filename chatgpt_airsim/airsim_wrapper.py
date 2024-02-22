@@ -33,12 +33,12 @@ class AirSimWrapper:
         self.repel_factor = 10
 
         self.radius = 50  # Greater than close_limit
-        self.interp_strength = 0.5  # between 0-1
+        self.interp_strength = 1  # between 0-1
 
         self.goalSpeed = 5
 
         self.avoidLimit = 10
-        self.avoidFactor = 10
+        self.avoidFactor = 5
 
     def get_drone(self, index):
         return self.drones[index]

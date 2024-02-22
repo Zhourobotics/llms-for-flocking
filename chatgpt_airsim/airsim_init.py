@@ -7,7 +7,10 @@ import numpy as np
 import os
 import json
 import time
+import subprocess
 from vector_math import *
+import threading
+import queue
 
 # obtain list of drones
 with open('settings.json', 'r') as file:
@@ -35,12 +38,18 @@ aw.initialize()
 
 time.sleep(3)
 
-sepW = 2
-aliW = 1
-cohW = 1.5
+sepW = 1
+aliW = 0.5
+cohW = 1
 goalW = 2
 goalPos = aw.get_position('crowd')
-avoidW = 2.5
+avoidW = 3
+
+# Command to open a new Command Prompt and run a Python script
+#cmd_command = 'start cmd.exe @cmd /k python command_line.py'
+
+# Execute the command
+#subprocess.run(cmd_command, shell=True)
 
 while True:
     sepVectors = aw.separation()
@@ -48,15 +57,15 @@ while True:
     cohVectors = aw.cohesion()
     goalVectors = aw.goal(goalPos)
     avoidVectors = aw.avoid()
-    print(f'Separation Vectors: {sepVectors}')
-    print(f'Alignment Vectors: {alignVectors}')
-    print(f'Cohesion Vectors: {cohVectors}')
-    print(f'Goal Vectors: {goalVectors}')
-    print(f'Avoid Vectors: {avoidVectors}')
+    # print(f'Separation Vectors: {sepVectors}')
+    # print(f'Alignment Vectors: {alignVectors}')
+    # print(f'Cohesion Vectors: {cohVectors}')
+    # print(f'Goal Vectors: {goalVectors}')
+    # print(f'Avoid Vectors: {avoidVectors}')
 
     for drone, sepVec, alignVec, cohVec, goalVec, avoidVec in zip(aw.drones, sepVectors, alignVectors, cohVectors, goalVectors, avoidVectors):
         velVec = sumVec(
             [weightVec(sepVec, sepW), weightVec(alignVec, aliW), weightVec(cohVec, cohW), weightVec(goalVec, goalW), weightVec(avoidVec, avoidW)])
         drone.fly(velVec)
 
-    time.sleep(0.5)
+    time.sleep(0.2)
