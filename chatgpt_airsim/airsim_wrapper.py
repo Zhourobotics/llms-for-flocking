@@ -1,10 +1,5 @@
-import time
-
 import airsim
-import math
-import numpy as np
 from drone import Drone
-import random
 
 # dictionary of environment objects and their associated real names in AirSim
 objects_dict = {
@@ -33,7 +28,6 @@ class AirSimWrapper:
         self.repel_factor = 10
 
         self.radius = 50  # Greater than close_limit
-        self.interp_strength = 1  # between 0-1
 
         self.goalSpeed = 5
 
@@ -63,34 +57,34 @@ class AirSimWrapper:
     def separation(self):
         repelVectors = []
         for drone in self.drones:
-            repelVec = drone.separation(self.drones, self.close_limit, self.repel_factor, self.interp_strength)
+            repelVec = drone.separation(self.drones, self.close_limit, self.repel_factor)
             repelVectors.append(repelVec)
         return repelVectors
 
     def alignment(self):
         alignVectors = []
         for drone in self.drones:
-            alignVec = drone.alignment(self.drones, self.radius, self.interp_strength)
+            alignVec = drone.alignment(self.drones, self.radius)
             alignVectors.append(alignVec)
         return alignVectors
 
     def cohesion(self):
         cohesionVectors = []
         for drone in self.drones:
-            cohesVec = drone.cohesion(self.drones, self.radius, self.interp_strength)
+            cohesVec = drone.cohesion(self.drones, self.radius)
             cohesionVectors.append(cohesVec)
         return cohesionVectors
 
     def goal(self, goalPos):
         goalVectors = []
         for drone in self.drones:
-            goalVec = drone.goal(goalPos, self.goalSpeed, self.interp_strength)
+            goalVec = drone.goal(goalPos, self.goalSpeed)
             goalVectors.append(goalVec)
         return goalVectors
 
     def avoid(self):
         avoidVectors = []
         for drone in self.drones:
-            avoidVec = drone.avoid(self.avoidLimit, self.avoidFactor, self.interp_strength)
+            avoidVec = drone.avoid(self.avoidLimit, self.avoidFactor)
             avoidVectors.append(avoidVec)
         return avoidVectors

@@ -81,7 +81,7 @@ class Drone:
         yaw = airsim.to_eularian_angles(orientation_quat)[2]
         return yaw
 
-    def separation(self, drones, close_limit, repel_factor, interpStrength):
+    def separation(self, drones, close_limit, repel_factor):
         repelVecList = []
         dronePos = self.get_drone_position()
         for drone in drones:
@@ -96,7 +96,7 @@ class Drone:
             return [0, 0, 0]
         return averageRepelVec
 
-    def alignment(self, drones, radius, interpStrength):
+    def alignment(self, drones, radius):
         limitDronesVel = []
         for drone in drones:
             if drone != self and calcDist(self.get_drone_position(), drone.get_drone_position()) < radius:
@@ -104,10 +104,9 @@ class Drone:
         if len(limitDronesVel) == 0:
             return self.get_drone_velocity()
         averageVel = averageVec(limitDronesVel)
-        interpVel = interpVec(self.get_drone_velocity(), averageVel, interpStrength)
-        return interpVel
+        return averageVel
 
-    def cohesion(self, drones, radius, interpStrength):
+    def cohesion(self, drones, radius):
         limitDronesPos = []
         for drone in drones:
             if drone != self and calcDist(self.get_drone_position(), drone.get_drone_position()) < radius:
@@ -118,7 +117,7 @@ class Drone:
         vel = calcDistVec(self.get_drone_position(), centroid)
         return vel
 
-    def goal(self, goal_position, speed, interpStrength):
+    def goal(self, goal_position, speed):
         current_position = self.get_drone_position()
         direction_vector = calcDistVec(current_position, goal_position)
         distance = mag(direction_vector)
@@ -135,7 +134,7 @@ class Drone:
 
         return velocity_vector
 
-    def avoid(self, avoidLimit, avoidFactor, interpStrength):
+    def avoid(self, avoidLimit, avoidFactor):
         dronePos = self.get_drone_position()
         if abs(dronePos[2]) < avoidLimit:
             dist_vec = [0, 0, abs(dronePos[2])]

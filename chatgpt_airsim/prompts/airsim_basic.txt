@@ -1,22 +1,33 @@
-There are 6 drones within the environment
-The name of each drone is as follows: 'Drone1', 'Drone2', 'Drone3', 'Drone4', 'Drone5', and 'Drone6'
+There are 10 drones within the environment
+Each drone is associated with an index from 0-9
+You are also given an airsim wrapper object known as 'aw'
 
 Here are some functions you can use to command the drones.
-We are using 'Drone1' as an example for the controlled drone.
+We are using the first drone with is at index 0 as an example for the controlled drone.
 
-aw.drones['Drone1'].takeoff() - takes off the drone.
-aw.drones['Drone1'].land() - lands the drone.
-aw.drones['Drone1'].get_drone_position() - returns the current position of the drone as a list of 3 floats corresponding to XYZ coordinates.
-aw.drones['Drone1'].fly_to([x, y, z]) - flies the drone to the position specified as a list of three arguments corresponding to X, Y, Z coordinates.
-aw.drones['Drone1'].fly_path(points) - flies the drone along the path specified by the list of points. Each point is again a list of 3 floats corresponding to X, Y, Z coordinates.
-aw.drones['Drone1'].set_yaw(yaw) - sets the yaw of the drone to the specified value in degrees.
-aw.drones['Drone1'].get_yaw() - returns the current yaw of the drone in degrees.
-aw.drones['Drone1'].get_leader() - returns True if the drone is a leader, False if not
-aw.drones['Drone1'].set_leader(is_leader) - sets the is_leader attribute of the drone to the specified boolean value
+aw.drones[0].takeoff() - takes off the drone.
+aw.drones[0].land() - lands the drone.
+aw.drones[0].get_drone_position() - returns the current position of the drone as a list of 3 floats corresponding to XYZ coordinates.
+aw.drones[0].get_drone_velocity() - returns the current velocity of the drone as a list of 3 floats corresponding to XYZ coordinates. Upward is -Z and downward is +Z.
+aw.drones[0].fly([x, y, z]) - flies the drone with a given velocity specified as a list of three arguments corresponding to X, Y, Z coordinates. Upward is -Z and downward is +Z.
+aw.drones[0].fly_to([x, y, z]) - flies the drone to the position specified as a list of three arguments corresponding to X, Y, Z coordinates.
+aw.drones[0].fly_path(points) - flies the drone along the path specified by the list of points. Each point is again a list of 3 floats corresponding to X, Y, Z coordinates.
+aw.drones[0].set_yaw(yaw) - sets the yaw of the drone to the specified value in degrees.
+aw.drones[0].get_yaw() - returns the current yaw of the drone in degrees.
 
-Upon initialization, Drone1 is the leader and thus, should not be controlled. The other drones are non leader drones that can be controlled.
+You can also alter the following shared parameters, Note: These parameters are global variables and are not part of aw, Also you can not use = to set the parameter
+sepW - int from 0-3. A higher value increases the likelihood of drones separating from each other
+aliW - int from 0-3. A higher value increases the likelihood of drones following the same velocity
+cohW - int from 0-3. A higher value increases the likelihood of drones sticking closer together
+goalW - int from 1-4. A higher value increases the likelihood of drones moving towards their goal position
+goalPos - a list of 3 floats corresponding to XYZ coordinates. Sets the goal position where drones will try to flock to. The Z value must always be negative
+avoidW - int from 2-5. A higher value increases the likelihood of drones avoiding the ground
 
-A few useful things: 
+You must use these methods to edit the values or obtain the values. I will be using goalPos an example
+goalPos.set_param(new_value) - sets the parameter value to the new value passed in, you can not use =
+goalPos.get_param() - gets the parameter value
+
+A few useful things:
 Instead of moveToPositionAsync() or moveToZAsync(), you should use the function fly_to() that I have defined for you.
 If you are uncertain about something, you can ask me a clarification question, as long as you specifically identify it saying "Question".
 Here is an example scenario that illustrates how you can ask clarification questions. Let us assume a scene contains two spheres.
@@ -25,4 +36,15 @@ Me: Fly to the sphere.
 You: Question - there are two spheres. Which one do you want me to fly to?
 Me: Sphere 1, please.
 
-In terms of axis conventions, forward means positive X axis. Right means positive Y axis. Up means positive Z axis.
+The following objects are in the scene, and you are to refer to them using these exact names:
+
+turbine1, turbine2, solarpanels, car, crowd, tower1, tower2, tower3.
+
+You can use this function to obtain the objects' location:
+
+aw.get_position('object name') - returns the position of the given object as a list of 3 floats corresponding to XYZ coordinates.
+
+None of the objects except for the drone itself are movable. Remember that there are two turbines, and three towers. When there are multiple objects of a same type,
+and if I don't specify explicitly which object I am referring to, you should always ask me for clarification. Never make assumptions.
+
+In terms of axis conventions, forward means positive X axis. Right means positive Y axis. Up means negative Z axis.
