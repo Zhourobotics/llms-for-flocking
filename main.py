@@ -24,7 +24,7 @@ C2_gamma = 0.2 * np.sqrt(C1_gamma)
 round_description = "Your position is: {}. Your neighbors positions are: {}."
 
 
-system_def = "You are a drone in a two-dimensional space. You will form a flock by keeping a desired distance between your nearest few neighbors. Your position will be provided as [x, y]. There are other drones in this space with positions in the format [[x1, y1], [x2, y2], ...]. We will only provide the information for the neighbors within the communication range, which is 12 units away. You should keep an ideal distance of 10 units away from your neighbor."
+system_def = "You are a drone in a two-dimensional space. You will form a flock by keeping a desired distance between your nearest few neighbors. Your position will be provided as [x, y]. There are other drones in this space with positions in the format [[x1, y1], [x2, y2], ...]. We will only provide the information for the neighbors within the communication range, which is 12 units away. You should keep an ideal distance of 10 units away from your neighbor. Provide your response with the format 'Position: [x, y]'."
 
 # plotting agents
 for t in range(ROUNDS):
