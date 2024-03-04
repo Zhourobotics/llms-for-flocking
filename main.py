@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 from elements.model import MultiAgent
 from elements.assets import *
 
-ROUNDS = 60
+ROUNDS = 70
 RANGE = 12
 DISTANCE = 10
-NUMBER_OF_AGENTS = 4
+NUMBER_OF_AGENTS = 3
 multi_agent_system = MultiAgent(number=NUMBER_OF_AGENTS, steps=ROUNDS)
 IF_PLOT = True
 
@@ -16,13 +16,12 @@ C1_gamma = 5
 C2_gamma = 0.2 * np.sqrt(C1_gamma)
 
 
-game_description = "Your position is: {}. There are other drones in this space and their positions (in the format [[x, y], [x, y]...]) are: {}. Your collective task are to implement a flocking behavior. Keep in mind Boids flocking rules. Consider the velocity of the agents by calculating their distance traveled over the last few rounds. Attempt to match the velocity of nearby agents and adjust your movement to align with this average direction. Consider what are the distances between you and the other drones? If they are too close, you must move away to maintain personal space, otherwise you will fail the task. Finally, if you are not near any other agents, move towards the center of mass of nearby agents to stay close to the group."
+game_description = "Your position is: {}. There positions of other drones are (in the format [[x, y], [x, y]...]) are: {}. "
 
 round_description = "Your position is: {}. The positions of the other drones (in the format [[x, y], [x, y]...]) are: {}. Pick a position to move to to implement Boids flocking behavior, and briefly explain the reasoning behind your decision."
 
 output_format = (
-    "Strictly follow the &quot;Position: [x, y]&quot; format to provide your answer. x and y must both be "
-    "floating point numbers truncated to two decimal places. Do not write ANYTHING ELSE in the position section."
+    "Strictly follow the &quot;Position: [x, y]&quot; format to provide your answer."
 )
 
 # plotting agents
@@ -74,9 +73,9 @@ for t in range(ROUNDS):
 
 
 
-data = [[{"role": "system", "content": "You are a drone navigating a two-dimensional space."}]] * NUMBER_OF_AGENTS
+data = [[{"role": "system", "content": "You are a drone navigating a two-dimensional space. There are other drones in the space. Your collective task is to implement a flocking behavior. Keep in mind Boids flocking rules. Consider the velocity of the agents by calculating their distance traveled over the last few rounds. Attempt to match the velocity of nearby agents and adjust your movement to align with this average direction. Consider what are the distances between you and the other drones? If they are too close, you must move away to maintain personal space, otherwise you will fail the task. Finally, if you are not near any other agents, move towards the center of mass of nearby agents to stay close to the group."}]] * NUMBER_OF_AGENTS
 
-step = 4
+step = 5
 
 for r in range(ROUNDS):
     for a in range(NUMBER_OF_AGENTS):
@@ -95,7 +94,7 @@ for r in range(ROUNDS):
                 print(str(r) + " " + str(a) + " " + "assist")
         
         if r == 0 or ((r) % step == 0):
-            data[a].extend([{"role": "user", "content": ((game_description if r == 0 else round_description).format(agent_position,other_agent_positions) + " " + output_format)}])
+            data[a].extend([{"role": "user", "content": ((game_description if r == 0 else round_description).format(agent_position,other_agent_positions) + " " )}])
             print(str(r) + " " + str(a) + " " + "user")
 
 
