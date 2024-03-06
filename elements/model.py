@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 # q_dot = u
 
 # Semi-Implicit Euler Method
-np.random.seed(42)
+# np.random.seed(42)
 class MultiAgent:
     def __init__(self, number, steps=200, sample_time=0.1):
         self.dt = sample_time

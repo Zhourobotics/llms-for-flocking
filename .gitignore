@@ -7,7 +7,7 @@ secrets.yml
 .DS_Store
 venv/
 .idea/
-test.py/
+test.py
 /results/*
 secret.yml
 main_sync.py
