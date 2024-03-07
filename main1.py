@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from elements.model import MultiAgent
 from elements.assets import *
+import json 
 
 ROUNDS = 70
 RANGE = 12
@@ -75,33 +76,34 @@ for t in range(ROUNDS):
 
 data = [[{"role": "system", "content": "You are a drone navigating a two-dimensional space. There are other drones in the space. Your collective task is to implement a flocking behavior. Keep in mind Boids flocking rules. Consider the velocity of the agents by calculating their distance traveled over the last few rounds. Attempt to match the velocity of nearby agents and adjust your movement to align with this average direction. Consider what are the distances between you and the other drones? If they are too close, you must move away to maintain personal space, otherwise you will fail the task. Finally, if you are not near any other agents, move towards the center of mass of nearby agents to stay close to the group."}]] * NUMBER_OF_AGENTS
 
-step = 4
+step = 1
 
-for r in range(ROUNDS):
-    for a in range(NUMBER_OF_AGENTS):
-        other_agent_positions = []
-        agent_position = []
-        
-        for i in range(NUMBER_OF_AGENTS): # other agents
-            if i == a:
-                agent_position = [round(multi_agent_system.agents_hist[r][i][0], 2), round(multi_agent_system.agents_hist[r][i][1], 2)]
-            else:
-                other_agent_positions.append([round(multi_agent_system.agents_hist[r][i][0], 2), round(multi_agent_system.agents_hist[r][i][1], 2)])
-        
-        if (r) % step == 0:
-            if (r != 0):
-                data[a].extend([{"role": "assistant", "content": "Position: {}".format(agent_position)}])
+with open("data3.jsonl", "a") as training_data:
+    for r in range(step, ROUNDS, step):
+        round_data = {"round": r, "data": []}
+        for a in range(NUMBER_OF_AGENTS):
+            other_agent_positions = []
+            agent_position = []
+            for i in range(NUMBER_OF_AGENTS):  # other agents
+                if i == a:
+                    agent_position = [round(multi_agent_system.agents_hist[r][i][0], 2),
+                                      round(multi_agent_system.agents_hist[r][i][1], 2)]
+                else:
+                    other_agent_positions.append(
+                        [round(multi_agent_system.agents_hist[r][i][0], 2),
+                         round(multi_agent_system.agents_hist[r][i][1], 2)])
+
+            if (r) % step == 0:
+                round_data["data"].append({"role": "assistant", "content": "Position: {}".format(agent_position)})
                 print(str(r) + " " + str(a) + " " + "assist")
-        #changed to r == step from ==0
-        if r == 0 or ((r) % step == 0):
-            data[a].extend([{"role": "user", "content": ((game_description if r == 0 else round_description).format(agent_position,other_agent_positions) + " " )}])
-            print(str(r) + " " + str(a) + " " + "user")
 
+            if r == 0 or ((r) % step == 0):
+                round_data["data"].append({"role": "user",
+                                            "content": ((game_description if r == 0 else round_description).format(
+                                                agent_position, other_agent_positions) + " ")})
+                print(str(r) + " " + str(a) + " " + "user")
 
-with open("data.jsonl", "a") as training_data:
-    for a in range(len(data)):                
-        message = str('{"messages": ' + str(data[a][:-1]) + '}').replace("'", '"').replace('\\"', '"').replace("&quot;", "'")  # lol python
-        training_data.write(message + "\n")
+        training_data.write(json.dumps(round_data) + "\n")
 
 if IF_PLOT:
     plt.show()
