@@ -58,6 +58,7 @@ async def main():
                     # wait for coroutines to finish
                     await asyncio.gather(*coroutines)
                     # update each agent's location!
+                    print("LOGGING THE UPDATES!")
                     list(map(lambda a: a.update(), agents))
 
                 except Exception as e:

@@ -35,7 +35,12 @@ class FlockingAgent:
 
     def update(self):
         print(self.latest)
-        exact_position = json.loads(self.latest.split("\nPosition: ")[1])
+        # print(self.latest.split("Position: "))
+        exact_position = json.loads(self.latest.split("Position: ")[1])
+        # print("####################")
+        # print(f'exact_position is : {exact_position}')
+        # print("####################")
+
         self.position = [  # round position to two decimal places
             round(exact_position[0], 2),
             round(exact_position[1], 2)
