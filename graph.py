@@ -16,7 +16,7 @@ class Graph:
         [0x16, 0x5a, 0x4c],  # forest green
         [0x4d, 0x9b, 0xe6],  # blue
         [0x30, 0xe1, 0xb9],  # cyan
-        [0xc3, 0x24, 0x54]   # dark pink
+        [0xc3, 0x24, 0x54]  # dark pink
     ]) / 255
 
     @staticmethod
@@ -32,8 +32,10 @@ class Graph:
             flight_path_line, = ax.plot([], [], lw=2, color=current_color, linestyle='--')
             lines.append(flight_path_line)
 
-            scatter = ax.scatter([], [], marker='o', c=current_color.reshape(1, -1), s=50, alpha=0.8, label=f'Drone {i + 1}')
+            scatter = ax.scatter([], [], marker='o', c=current_color.reshape(1, -1), s=50, alpha=0.8,
+                                 label=f'Drone {i + 1}')
             scatters.append(scatter)
+
         def init():
             ax.set_xlabel('x')
             ax.set_ylabel('y')
@@ -63,5 +65,5 @@ class Graph:
             return lines + scatters
 
         ani = FuncAnimation(fig, update, frames=data.settings.rounds, init_func=init, blit=False)
-        ani.save(f'{data.directory}/animation.gif', fps=15)
+        ani.save(f'{data.directory}/animation.gif', fps=3)
         plt.show()

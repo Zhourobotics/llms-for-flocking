@@ -3,12 +3,13 @@ import random
 import time
 import os
 
-from agents import FlockingAgent
+from agents import Agent
 from graph import Graph
 from data import Data
 
 from arguments import parse_cli_arguments
 import prompts
+
 
 async def main():
     args = parse_cli_arguments()
@@ -22,11 +23,18 @@ async def main():
             agents = []
 
             # ...and add them to the list
+            inactive_iter = args.zombies  # don't forget our non-moving (zombie) agents!
             for i in range(args.agents):
-                agents.append(FlockingAgent(i, [
-                    round(random.uniform(args.spawn_x_min, args.spawn_x_max), 2),
-                    round(random.uniform(args.spawn_y_min, args.spawn_y_max), 2),
-                ]))
+                agents.append(
+                    Agent(i,
+                          [
+                              round(random.uniform(args.spawn_x_min, args.spawn_x_max), 2),
+                              round(random.uniform(args.spawn_y_min, args.spawn_y_max), 2)
+                          ],
+                          False if (inactive_iter > 0) else True
+                          )
+                )
+                inactive_iter -= 1
 
             for r in range(args.rounds):
                 print("======ROUND {}/{}======".format(r + 1, args.rounds))
@@ -43,8 +51,7 @@ async def main():
                         message = args.prompt.format(agent.position, other_agent_positions)
 
                     # ask agent where to move (coroutine)
-                    coroutines.append(
-                        agent.prompt(message + " " + prompts.Flocking.output_format, args.model, args.memory_limit))
+                    coroutines.append(agent.prompt(message + " " + prompts.Utility.output_format, args.model, args.memory_limit))
 
                     print("------------------------------------")
                     print("AGENT", agent.identifier + 1)

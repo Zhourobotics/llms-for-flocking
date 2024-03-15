@@ -2,7 +2,7 @@ import argparse
 
 
 def parse_cli_arguments():
-    parser = argparse.ArgumentParser(description="Flocking LLM Simulation")
+    parser = argparse.ArgumentParser(description="Flocking Agents Simulation")
     parser.add_argument("--mode", "-m", choices=["run", "plot"], required=True,
                         help="Whether to 'run' the simulation, or to 'plot' a completed simulation")
 
@@ -31,6 +31,8 @@ def parse_cli_arguments():
 
     parser.add_argument("--rounds", "-t", type=int, default=10,
                         help="Number of rounds for the simulation to run")
+    parser.add_argument("--zombies", "-z", type=int, default=0,
+                        help="The number of inactive agents in the simulation")
     parser.add_argument("--agents", "-a", type=int, default=5,
                         help="Number of agents in the simulation")
     parser.add_argument("--memory_limit", "-mlim", type=int, default=6,
