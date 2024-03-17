@@ -2,14 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from elements.model import MultiAgent
 from elements.assets import *
+import json
 
-ROUNDS = 141
+ROUNDS = 61
 RANGE = 12
 DISTANCE = 10
 NUMBER_OF_AGENTS = 3
 multi_agent_system = MultiAgent(number=NUMBER_OF_AGENTS, steps=ROUNDS, sample_time=0.1)
 IF_PLOT = True
-IF_LOG = True
+IF_LOG = False
 
 C1_alpha = 3
 C2_alpha = 2 * np.sqrt(C1_alpha)
@@ -26,6 +27,31 @@ round_description = "Your position is: {}. Your neighbors positions are: {}."
 
 # system_def = "You are a drone in a two-dimensional space. You will form a Boid flock by keeping a desired distance between your nearest few neighbors and the flock center is at [50, 50]. Your position and velocity will be provided as [x, y, vx, vy]. There are other drones in this space with positions and velocities in the format [[x1, y1, vx1, vy1], [x2, y2, vx2, vy2], ...]. We will only provide the information for the neighbors within the communication range, which is 12 units away. You should keep an ideal distance of 10 units away from your neighbor. Provide your response with the format (Position: [x, y])."
 system_def = "You are a drone in a two-dimensional space. You will form a Boid flock by keeping a desired distance between your nearest few neighbors and the flock center is at [50, 50]. Your position and velocity will be provided as [x, y, vx, vy]. There are other drones in this space with positions and velocities in the format [[x1, y1, vx1, vy1], [x2, y2, vx2, vy2], ...]. You should keep an ideal distance of 10 units away from your neighbor. Provide your response with the format (Position: [x, y])."
+
+def transform_jsonl(jsonl_file_path, json_file_path):
+    transformed_data = []
+
+    # Open the JSONL file and read each line
+    with open(jsonl_file_path, 'r') as file:
+        for line in file:
+            # Parse the JSON content of the line
+            data = json.loads(line)
+            # Initialize a dictionary to hold the transformed structure
+            transformed_entry = {"system": "", "user": "", "assistant": ""}
+
+            # Loop through each message in 'messages'
+            for message in data['messages']:
+                role = message['role']
+                # Update the corresponding entry in the transformed dictionary
+                if role in transformed_entry:
+                    transformed_entry[role] = message['content']
+
+            # Append the transformed entry to the list
+            transformed_data.append(transformed_entry)
+
+    # Write the transformed data to a new JSON file
+    with open(json_file_path, 'w') as json_file:
+        json.dump(transformed_data, json_file, indent=4)
 
 # plotting agents
 for t in range(ROUNDS):
@@ -125,11 +151,15 @@ if IF_LOG:
             
 
     # print(data[0])
-    with open("data_vel_validate.jsonl", "a") as training_data:
+    exp_type = "data_vel_test"
+    file_path = f"./data/{exp_type}.jsonl"
+    with open("./data/data_vel_test.jsonl", "a") as training_data:
         for l in range(len(data)):
             if l != 1:
                 message = str('{"messages": ' + str(data[l]) + '}').replace("'", '"') # lol python
                 training_data.write(message + "\n")
+
+    transform_jsonl(file_path, "./data/llama/data_vel_test.json")
 
 if IF_PLOT:
     plt.show()
