@@ -15,3 +15,4 @@ main_sync.py
 *.jsonl
 *.yml
 test.py
+post_process.py

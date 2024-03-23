@@ -65,3 +65,16 @@ class Data:
         # Create our results directory
         if not os.path.exists(f'./{dirname}'):
             os.makedirs(f'./{dirname}')
+
+    @staticmethod
+    def post_process(args, results="results"):
+        # load the data
+        data = Data.load(args)
+        
+        # metrics for evaluation
+        # - MSE of the distance between agents
+        #       ?? Any two agents? or closest agents
+        for agent in data.agents:
+            
+
+

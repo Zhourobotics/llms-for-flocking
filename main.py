@@ -84,6 +84,10 @@ async def main():
     else:
         print(f'Error: Test {args.name} does not exist!')
 
+    # Data analysis
+        
+    # Grab the 
+
 
 if __name__ == "__main__":
     asyncio.run(main())

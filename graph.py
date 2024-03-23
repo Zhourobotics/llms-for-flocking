@@ -22,7 +22,7 @@ class Graph:
     @staticmethod
     def plot_animated(data):
         fig, ax = plt.subplots(figsize=(8, 4))
-
+        # ax.axis('equal')
         lines = []
         scatters = []
 
@@ -38,12 +38,15 @@ class Graph:
             ax.set_xlabel('x')
             ax.set_ylabel('y')
 
-            ax.set_ylim(data.settings.y_min, data.settings.y_max)
-            ax.set_xticks(range(data.settings.x_min, data.settings.x_max, data.settings.x_ticks))
+            # ax.set_ylim(data.settings.y_min, data.settings.y_max)
+            ax.set_xlim(-20, 100)
+            ax.set_ylim(-20, 100)
+            # ax.set_xticks(range(data.settings.x_min, data.settings.x_max, data.settings.x_ticks))
 
             for dashed_line, scatter in zip(lines, scatters):
                 dashed_line.set_data([], [])
                 scatter.set_offsets(np.empty((0, 2)))
+            ax.set_aspect('equal', 'box')
 
             handles, labels = ax.get_legend_handles_labels()
             ax.legend(handles=handles, labels=labels, loc="upper left", labelspacing=0.6, fontsize=10)
@@ -65,4 +68,5 @@ class Graph:
 
         ani = FuncAnimation(fig, update, frames=data.settings.rounds, init_func=init, blit=False)
         ani.save(f'{data.directory}/animation.gif', fps=15)
+        plt.axis('equal')
         plt.show()
