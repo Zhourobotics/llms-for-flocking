@@ -1,5 +1,8 @@
-# LLMS For Flocking
-The first ever flocking LLM paper!
+<div align="center">
+  <h1>Challenges Faced by Large Language Models in<br>Solving Multi-Agent Flocking</h1>
+</div>
+
+This repository contains our implementation of our papers flocking simulation.
 
 ## Prerequisites
 
