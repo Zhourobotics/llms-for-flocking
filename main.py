@@ -4,13 +4,13 @@ from elements.model import MultiAgent
 from elements.assets import *
 import json
 
-ROUNDS = 61
+ROUNDS = 101
 RANGE = 12
 DISTANCE = 10
 NUMBER_OF_AGENTS = 3
 multi_agent_system = MultiAgent(number=NUMBER_OF_AGENTS, steps=ROUNDS, sample_time=0.1)
-IF_PLOT = True
-IF_LOG = False
+IF_PLOT = False
+IF_LOG = True
 
 C1_alpha = 3
 C2_alpha = 2 * np.sqrt(C1_alpha)
@@ -26,7 +26,8 @@ round_description = "Your position is: {}. Your neighbors positions are: {}."
 
 
 # system_def = "You are a drone in a two-dimensional space. You will form a Boid flock by keeping a desired distance between your nearest few neighbors and the flock center is at [50, 50]. Your position and velocity will be provided as [x, y, vx, vy]. There are other drones in this space with positions and velocities in the format [[x1, y1, vx1, vy1], [x2, y2, vx2, vy2], ...]. We will only provide the information for the neighbors within the communication range, which is 12 units away. You should keep an ideal distance of 10 units away from your neighbor. Provide your response with the format (Position: [x, y])."
-system_def = "You are a drone in a two-dimensional space. You will form a Boid flock by keeping a desired distance between your nearest few neighbors and the flock center is at [50, 50]. Your position and velocity will be provided as [x, y, vx, vy]. There are other drones in this space with positions and velocities in the format [[x1, y1, vx1, vy1], [x2, y2, vx2, vy2], ...]. You should keep an ideal distance of 10 units away from your neighbor. Provide your response with the format (Position: [x, y])."
+# system_def = "You are a drone in a two-dimensional space. You will form a Boid flock by keeping a desired distance between your nearest few neighbors and the flock center is at [50, 50]. Your position and velocity will be provided as [x, y, vx, vy]. There are other drones in this space with positions and velocities in the format [[x1, y1, vx1, vy1], [x2, y2, vx2, vy2], ...]. You should keep an ideal distance of 10 units away from your neighbor. Provide your response with the format (Position: [x, y])."
+system_def = "You are a drone in a two-dimensional space. You will form a Boid flock by keeping a desired distance between your nearest few neighbors and the flock center is at [50, 50]. Your position will be provided as [x, y]. There are other drones in this space with positions  in the format [[x1, y1], [x2, y2], ...]. You should keep an ideal distance of 10 units away from your neighbor. Provide your response with the format (Position: [x, y])."
 
 def transform_jsonl(jsonl_file_path, json_file_path):
     transformed_data = []
@@ -102,38 +103,59 @@ for t in range(ROUNDS):
         plt.pause(0.01)
 
 step = 10
+extend = step  ########## Change this for steps of history ############
 # print("Running")
 
-data_len = len(range(0, ROUNDS-step, step))
+data_len = len(range(0, ROUNDS-step, step)) if not extend else len(range(0, ROUNDS-step, step))
+print(f"data_len = {data_len}")
 if IF_LOG:
-    data = [[{"role": "system", "content": system_def}] for _ in range(data_len * NUMBER_OF_AGENTS)]
+    if extend == 0:
+        data = [[{"role": "system", "content": system_def}] for _ in range(data_len * NUMBER_OF_AGENTS)] 
+    else:
+        data = [[{"role": "system", "content": system_def}] for _ in range((data_len-1) * NUMBER_OF_AGENTS)] 
+
     # print(data)
     for a in range(NUMBER_OF_AGENTS):
         for ind, r in enumerate(range(0, ROUNDS, step)):
-            if r + step < ROUNDS:
+            if r + step + extend < ROUNDS:
                 # print(r+step)
                 other_agent_positions = []
+                other_agent_positions_extend = []
                 agent_position = []
                 for i in range(NUMBER_OF_AGENTS): # other agents
                     if i == a:
-                        # agent_position = [round(multi_agent_system.agents_hist[r][i][0], 2), round(multi_agent_system.agents_hist[r][i][1], 2)]
-                        # agent_next = [round(multi_agent_system.agents_hist[r+step][i][0], 2), round(multi_agent_system.agents_hist[r+step][i][1], 2)]
+                    
+                        agent_position = [round(multi_agent_system.agents_hist[r][i][0], 2), round(multi_agent_system.agents_hist[r][i][1], 2)]
+                        agent_next = [round(multi_agent_system.agents_hist[r+step][i][0], 2), round(multi_agent_system.agents_hist[r+step][i][1], 2)]
 
-                        agent_position = [round(multi_agent_system.agents_hist[r][i][0], 2), 
-                                          round(multi_agent_system.agents_hist[r][i][1], 2),
-                                          round(multi_agent_system.agents_hist[r][i][2], 2), 
-                                          round(multi_agent_system.agents_hist[r][i][3], 2)]
-                        agent_next = [round(multi_agent_system.agents_hist[r+step][i][0], 2), 
-                                      round(multi_agent_system.agents_hist[r+step][i][1], 2),
-                                      round(multi_agent_system.agents_hist[r+step][i][2], 2),
-                                      round(multi_agent_system.agents_hist[r+step][i][3], 2)]
+                        if extend != 0: # when we consider the extra history
+                            agent_position_extend = [round(multi_agent_system.agents_hist[r + extend][i][0], 2), round(multi_agent_system.agents_hist[r + extend][i][1], 2)]
+                            agent_next_extend = [round(multi_agent_system.agents_hist[r + step + extend][i][0], 2), round(multi_agent_system.agents_hist[r + step + extend][i][1], 2)]
+
+                        # agent_position = [round(multi_agent_system.agents_hist[r][i][0], 2), 
+                        #                   round(multi_agent_system.agents_hist[r][i][1], 2),
+                        #                   round(multi_agent_system.agents_hist[r][i][2], 2), 
+                        #                   round(multi_agent_system.agents_hist[r][i][3], 2)]
+                        # agent_next = [round(multi_agent_system.agents_hist[r+step][i][0], 2), 
+                        #               round(multi_agent_system.agents_hist[r+step][i][1], 2),
+                        #               round(multi_agent_system.agents_hist[r+step][i][2], 2),
+                        #               round(multi_agent_system.agents_hist[r+step][i][3], 2)]
 
                     else:
                         other_agent_positions.append([round(multi_agent_system.agents_hist[r][i][0], 2), round(multi_agent_system.agents_hist[r][i][1], 2)])
+                        if extend != 0:
+                            other_agent_positions_extend.append([round(multi_agent_system.agents_hist[r+extend][i][0], 2), round(multi_agent_system.agents_hist[r+extend][i][1], 2)])
+
                 # print(f'{agent_position}, {other_agent_positions}')
-                message = [{"role": "user", "content": round_description.format(agent_position,other_agent_positions)},
-                    {"role": "assistant", "content": "Position: {}".format(agent_next)}]
-                index = ind + a*data_len
+                if extend == 0 :
+                    message = [{"role": "user", "content": round_description.format(agent_position,other_agent_positions)},
+                        {"role": "assistant", "content": "Position: {}".format(agent_next)}]
+                else:
+                        message = [{"role": "user", "content": round_description.format(agent_position,other_agent_positions)},
+                            {"role": "assistant", "content": "Position: {}".format(agent_next)},
+                            {"role": "user", "content": round_description.format(agent_position_extend,other_agent_positions_extend)},
+                            {"role": "assistant", "content": "Position: {}".format(agent_next_extend)}]
+                index = ind + a*(data_len-1)
                 # print(index)
                 # data[index].extend(
                 #     message
@@ -151,15 +173,15 @@ if IF_LOG:
             
 
     # print(data[0])
-    exp_type = "data_vel_test"
+    exp_type = "data_vel_test_multi_validate"
     file_path = f"./data/{exp_type}.jsonl"
-    with open("./data/data_vel_test.jsonl", "a") as training_data:
+    with open(file_path, "a") as training_data:
         for l in range(len(data)):
             if l != 1:
                 message = str('{"messages": ' + str(data[l]) + '}').replace("'", '"') # lol python
                 training_data.write(message + "\n")
 
-    transform_jsonl(file_path, "./data/llama/data_vel_test.json")
+    transform_jsonl(file_path, f"./data/llama/{exp_type}_llama.json")
 
 if IF_PLOT:
     plt.show()
